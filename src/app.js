@@ -11,13 +11,13 @@ app.use(express.json());
 
 app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
-app.use('/', (req, res, next) => {
-  if (req.originalUrl === '/') {
-    res.send('Service is running!');
-    return;
-  }
-  next();
-});
+// app.use('/', (req, res, next) => {
+//   if (req.originalUrl === '/') {
+//     res.send('Service is running!');
+//     return;
+//   }
+//   next();
+// });
 
 app.use('/users', userRouter);
 
