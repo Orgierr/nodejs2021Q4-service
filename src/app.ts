@@ -3,9 +3,11 @@ import bodyParser from 'koa-bodyparser';
 import { router as usersRouter } from './resources/users/user.router';
 import { router as boardsRouter } from './resources/boards/board.router';
 import { router as tasksRouter } from './resources/tasks/task.router';
+import { errorHandler } from './errors/error_handler';
 
 export const app = new Koa();
 
+app.use(errorHandler);
 app.use(bodyParser());
 app.use(usersRouter.routes());
 app.use(usersRouter.allowedMethods());

@@ -6,6 +6,8 @@ import usersService from './user.service';
 export const router = new Router();
 
 router.get('/users', async (ctx) => {
+  throw new Error('sdfsddf');
+
   const users = await usersService.getAll();
   ctx.body = users.map(User.toResponse);
 });
