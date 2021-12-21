@@ -15,13 +15,16 @@ export async function errorHandler(ctx: ParameterizedContext, next: Next) {
   } catch (error) {
     const err = error as Error;
     if (err) {
-      logger.error('This is an error log');
-      logger.warn('This is a warn log');
-      logger.info('This is a info log');
-      logger.http('This is a http log');
-      logger.debug('This is a debug log');
       ctx.response.status = StatusCodes.INTERNAL_SERVER_ERROR;
       ctx.body = ReasonPhrases.INTERNAL_SERVER_ERROR;
+      logger.error(
+        ctx.url,
+        ctx.query,
+        ctx.body,
+        ctx.response.status,
+        err.message,
+        err.stack
+      );
       return;
     }
     return;

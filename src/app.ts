@@ -3,7 +3,8 @@ import bodyParser from 'koa-bodyparser';
 import { router as usersRouter } from './resources/users/user.router';
 import { router as boardsRouter } from './resources/boards/board.router';
 import { router as tasksRouter } from './resources/tasks/task.router';
-import { errorHandler } from './errors/error_handler';
+import { errorHandler } from './middleware/error_handler';
+import { loggerHandler } from './middleware/logger_handler';
 
 export const app = new Koa();
 
@@ -21,3 +22,4 @@ app.use(async (ctx, next) => {
   }
   await next();
 });
+app.use(loggerHandler);

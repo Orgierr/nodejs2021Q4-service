@@ -8,7 +8,7 @@ export const router = new Router();
 router.get('/users', async (ctx, next) => {
   const users = await usersService.getAll();
   ctx.body = users.map(User.toResponse);
-  next();
+  await next();
 });
 
 router.get('/users/:id', async (ctx, next) => {
@@ -19,7 +19,7 @@ router.get('/users/:id', async (ctx, next) => {
     return;
   }
   ctx.response.status = 404;
-  next();
+  await next();
 });
 
 router.post('/users', async (ctx, next) => {
@@ -28,7 +28,7 @@ router.post('/users', async (ctx, next) => {
   await usersService.createUser(user);
   ctx.response.status = 201;
   ctx.body = User.toResponse(user);
-  next();
+  await next();
 });
 
 router.put('/users/:id', async (ctx, next) => {
@@ -41,7 +41,7 @@ router.put('/users/:id', async (ctx, next) => {
     return;
   }
   ctx.response.status = 404;
-  next();
+  await next();
 });
 
 router.delete('/users/:id', async (ctx, next) => {
@@ -52,5 +52,5 @@ router.delete('/users/:id', async (ctx, next) => {
     return;
   }
   ctx.response.status = 404;
-  next();
+  await next();
 });

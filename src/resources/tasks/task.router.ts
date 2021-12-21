@@ -8,7 +8,7 @@ router.get('/boards/:boardId/tasks', async (ctx, next) => {
   const params = <TaskParamsType>ctx.params;
   const tasks = await tasksService.getAllTaskByBoardId(params.boardId);
   ctx.body = tasks.map((task) => task);
-  next();
+  await next();
 });
 
 router.get('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
@@ -22,7 +22,7 @@ router.get('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
     return;
   }
   ctx.body = task;
-  next();
+  await next();
 });
 
 router.post('/boards/:boardId/tasks', async (ctx, next) => {
@@ -32,7 +32,7 @@ router.post('/boards/:boardId/tasks', async (ctx, next) => {
   await tasksService.createTasks(task);
   ctx.response.status = 201;
   ctx.body = task;
-  next();
+  await next();
 });
 
 router.put('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
@@ -45,7 +45,7 @@ router.put('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
     return;
   }
   ctx.response.status = 404;
-  next();
+  await next();
 });
 
 router.delete('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
@@ -56,5 +56,5 @@ router.delete('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
     return;
   }
   ctx.response.status = 404;
-  next();
+  await next();
 });

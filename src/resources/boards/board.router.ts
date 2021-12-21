@@ -7,7 +7,7 @@ export const router = new Router();
 router.get('/boards', async (ctx, next) => {
   const boards = await boardService.getAll();
   ctx.body = boards;
-  next();
+  await next();
 });
 
 router.get('/boards/:id', async (ctx, next) => {
@@ -19,7 +19,7 @@ router.get('/boards/:id', async (ctx, next) => {
     return;
   }
   ctx.response.status = 404;
-  next();
+  await next();
 });
 
 router.post('/boards', async (ctx, next) => {
@@ -27,7 +27,7 @@ router.post('/boards', async (ctx, next) => {
   await boardService.createBoard(board);
   ctx.response.status = 201;
   ctx.body = board;
-  next();
+  await next();
 });
 
 router.put('/boards/:id', async (ctx, next) => {
@@ -39,7 +39,7 @@ router.put('/boards/:id', async (ctx, next) => {
     return;
   }
   ctx.response.status = 404;
-  next();
+  await next();
 });
 
 router.delete('/boards/:id', async (ctx, next) => {
@@ -50,5 +50,5 @@ router.delete('/boards/:id', async (ctx, next) => {
     return;
   }
   ctx.response.status = 404;
-  next();
+  await next();
 });
