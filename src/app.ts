@@ -26,10 +26,11 @@ app.use(async (ctx, next) => {
 app.use(loggerHandler);
 
 process.on('uncaughtException', (err) => {
-  logger.error(err.message);
+  logger.error(err.stack ?? '', function () {
+    process.exit(1);
+  });
 });
 
-process.on('unhandledRejection', (err) => {
-  const error = err as Error;
-  logger.error(error.message);
-});
+// process.on('unhandledRejection', (err) => {
+
+// });
