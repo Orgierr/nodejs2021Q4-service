@@ -17,14 +17,15 @@ export async function errorHandler(ctx: ParameterizedContext, next: Next) {
     if (err) {
       ctx.response.status = StatusCodes.INTERNAL_SERVER_ERROR;
       ctx.body = ReasonPhrases.INTERNAL_SERVER_ERROR;
-      logger.error(
-        ctx.url,
-        ctx.query,
-        ctx.body,
-        ctx.response.status,
-        err.message,
-        err.stack
-      );
+
+      logger.error({
+        url: ctx.url,
+        query: ctx.query,
+        body: ctx.body,
+        status: ctx.response.status,
+        stack: err.stack,
+      });
+
       return;
     }
     return;

@@ -14,6 +14,16 @@ const level = () => {
   return isDevelopment ? 'debug' : 'warn';
 };
 
+const colors = {
+  error: 'red',
+  warn: 'yellow',
+  info: 'green',
+  http: 'magenta',
+  debug: 'white',
+};
+
+winston.addColors(colors);
+
 const format = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
   winston.format.printf(
@@ -23,12 +33,17 @@ const format = winston.format.combine(
 );
 
 const transports = [
-  new winston.transports.Console(),
+  new winston.transports.Console({
+    format: winston.format.combine(
+      format,
+      winston.format.colorize({ all: true })
+    ),
+  }),
   new winston.transports.File({
     filename: 'logs/error.log',
     level: 'error',
   }),
-  new winston.transports.File({ filename: 'logs/http.log', level: 'http' }),
+  new winston.transports.File({ filename: 'logs/all.log', level: 'http' }),
 ];
 
 export const logger = winston.createLogger({
