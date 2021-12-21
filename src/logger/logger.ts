@@ -8,11 +8,11 @@ const levels = {
   debug: 4,
 };
 
-const level = () => {
-  const env = process.env['NODE_ENV'] || 'development';
-  const isDevelopment = env === 'development';
-  return isDevelopment ? 'debug' : 'warn';
-};
+// const level = () => {
+//   const env = process.env['NODE_ENV'] || 'development';
+//   const isDevelopment = env === 'development';
+//   return isDevelopment ? 'debug' : 'warn';
+// };
 
 const colors = {
   error: 'red',
@@ -47,7 +47,7 @@ const transports = [
 ];
 
 export const logger = winston.createLogger({
-  level: level(),
+  level: 'error',
   levels,
   format,
   transports,
