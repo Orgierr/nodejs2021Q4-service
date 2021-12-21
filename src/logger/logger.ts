@@ -14,21 +14,11 @@ const level = () => {
   return isDevelopment ? 'debug' : 'warn';
 };
 
-const colors = {
-  error: 'red',
-  warn: 'yellow',
-  info: 'green',
-  http: 'magenta',
-  debug: 'white',
-};
-
-winston.addColors(colors);
-
 const format = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-  winston.format.colorize({ all: true }),
   winston.format.printf(
-    (info) => `${info['timestamp']} ${info.level}: ${info.message}`
+    (info) =>
+      `${info['timestamp']} ${info.level}: ${JSON.stringify(info.message)}`
   )
 );
 
@@ -38,7 +28,7 @@ const transports = [
     filename: 'logs/error.log',
     level: 'error',
   }),
-  new winston.transports.File({ filename: 'logs/all.log' }),
+  new winston.transports.File({ filename: 'logs/http.log', level: 'http' }),
 ];
 
 export const logger = winston.createLogger({

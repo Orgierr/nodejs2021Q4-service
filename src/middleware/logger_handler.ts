@@ -8,6 +8,11 @@ import { logger } from '../logger/logger';
  * @returns  Promise(string | undefined)
  */
 export async function loggerHandler(ctx: ParameterizedContext, next: Next) {
-  logger.http(ctx.url, ctx.query, ctx.body, ctx.response.status);
+  logger.http({
+    url: ctx.url,
+    query: ctx.query,
+    body: ctx.body,
+    responseCode: ctx.response.status,
+  });
   await next();
 }

@@ -5,6 +5,7 @@ import { router as boardsRouter } from './resources/boards/board.router';
 import { router as tasksRouter } from './resources/tasks/task.router';
 import { errorHandler } from './middleware/error_handler';
 import { loggerHandler } from './middleware/logger_handler';
+import { logger } from './logger/logger';
 
 export const app = new Koa();
 
@@ -23,3 +24,12 @@ app.use(async (ctx, next) => {
   await next();
 });
 app.use(loggerHandler);
+
+process.on('uncaughtException', (err) => {
+  logger.error(err.message);
+});
+
+process.on('unhandledRejection', (err) => {
+  const error = err as Error;
+  logger.error(error.message);
+});
