@@ -15,7 +15,6 @@ app.use(boardsRouter.routes());
 app.use(boardsRouter.allowedMethods());
 app.use(tasksRouter.routes());
 app.use(tasksRouter.allowedMethods());
-
 app.use(async (ctx, next) => {
   if (ctx.request.url === '/') {
     ctx.body = 'Service is running!';

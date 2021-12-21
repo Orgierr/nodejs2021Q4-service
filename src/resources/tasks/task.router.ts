@@ -4,13 +4,14 @@ import tasksService from './task.service';
 import { Task } from './task.model';
 import { TaskParamsType } from '../../types/types';
 
-router.get('/boards/:boardId/tasks', async (ctx) => {
+router.get('/boards/:boardId/tasks', async (ctx, next) => {
   const params = <TaskParamsType>ctx.params;
   const tasks = await tasksService.getAllTaskByBoardId(params.boardId);
   ctx.body = tasks.map((task) => task);
+  next();
 });
 
-router.get('/boards/:boardId/tasks/:taskId', async (ctx) => {
+router.get('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
   const params = <TaskParamsType>ctx.params;
   const task = await tasksService.getTaskByBoardIdAndTaskId(
     params.boardId,
@@ -21,18 +22,20 @@ router.get('/boards/:boardId/tasks/:taskId', async (ctx) => {
     return;
   }
   ctx.body = task;
+  next();
 });
 
-router.post('/boards/:boardId/tasks', async (ctx) => {
+router.post('/boards/:boardId/tasks', async (ctx, next) => {
   const params = <TaskParamsType>ctx.params;
   ctx.request.body.boardId = params.boardId;
   const task = new Task(ctx.request.body);
   await tasksService.createTasks(task);
   ctx.response.status = 201;
   ctx.body = task;
+  next();
 });
 
-router.put('/boards/:boardId/tasks/:taskId', async (ctx) => {
+router.put('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
   const params = <TaskParamsType>ctx.params;
   ctx.request.body.boardId = params.boardId;
   ctx.request.body.id = params.taskId;
@@ -42,9 +45,10 @@ router.put('/boards/:boardId/tasks/:taskId', async (ctx) => {
     return;
   }
   ctx.response.status = 404;
+  next();
 });
 
-router.delete('/boards/:boardId/tasks/:taskId', async (ctx) => {
+router.delete('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
   const params = <TaskParamsType>ctx.params;
   const task = await tasksService.deleteTask(params.boardId, params.taskId);
   if (task.length) {
@@ -52,4 +56,5 @@ router.delete('/boards/:boardId/tasks/:taskId', async (ctx) => {
     return;
   }
   ctx.response.status = 404;
+  next();
 });

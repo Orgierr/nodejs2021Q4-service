@@ -1,5 +1,6 @@
 import { ParameterizedContext, Next } from 'koa';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { logger } from '../logger/logger';
 /**
  *
  *
@@ -14,7 +15,11 @@ export async function errorHandler(ctx: ParameterizedContext, next: Next) {
   } catch (error) {
     const err = error as Error;
     if (err) {
-      console.log('Exception caught');
+      logger.error('This is an error log');
+      logger.warn('This is a warn log');
+      logger.info('This is a info log');
+      logger.http('This is a http log');
+      logger.debug('This is a debug log');
       ctx.response.status = StatusCodes.INTERNAL_SERVER_ERROR;
       ctx.body = ReasonPhrases.INTERNAL_SERVER_ERROR;
       return;

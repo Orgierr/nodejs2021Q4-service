@@ -9,6 +9,7 @@ const user_model_1 = require("./user.model");
 const user_service_1 = __importDefault(require("./user.service"));
 exports.router = new koa_router_1.default();
 exports.router.get('/users', async (ctx) => {
+    throw new Error('sdfsddf');
     const users = await user_service_1.default.getAll();
     ctx.body = users.map(user_model_1.User.toResponse);
 });

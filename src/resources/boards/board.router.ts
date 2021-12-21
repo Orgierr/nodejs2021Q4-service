@@ -4,12 +4,13 @@ import { Board } from './board.model';
 import { IdParamsType } from '../../types/types';
 export const router = new Router();
 
-router.get('/boards', async (ctx) => {
+router.get('/boards', async (ctx, next) => {
   const boards = await boardService.getAll();
   ctx.body = boards;
+  next();
 });
 
-router.get('/boards/:id', async (ctx) => {
+router.get('/boards/:id', async (ctx, next) => {
   const params = <IdParamsType>ctx.params;
 
   const board = boardService.getBoardById(params.id);
@@ -18,16 +19,18 @@ router.get('/boards/:id', async (ctx) => {
     return;
   }
   ctx.response.status = 404;
+  next();
 });
 
-router.post('/boards', async (ctx) => {
+router.post('/boards', async (ctx, next) => {
   const board = new Board(ctx.request.body);
   await boardService.createBoard(board);
   ctx.response.status = 201;
   ctx.body = board;
+  next();
 });
 
-router.put('/boards/:id', async (ctx) => {
+router.put('/boards/:id', async (ctx, next) => {
   const params = <IdParamsType>ctx.params;
   ctx.request.body.id = params.id;
   const board = await boardService.updateBoard(ctx.request.body);
@@ -36,9 +39,10 @@ router.put('/boards/:id', async (ctx) => {
     return;
   }
   ctx.response.status = 404;
+  next();
 });
 
-router.delete('/boards/:id', async (ctx) => {
+router.delete('/boards/:id', async (ctx, next) => {
   const params = <IdParamsType>ctx.params;
   const board = await boardService.deleteBoardById(params.id);
   if (board.length) {
@@ -46,4 +50,5 @@ router.delete('/boards/:id', async (ctx) => {
     return;
   }
   ctx.response.status = 404;
+  next();
 });

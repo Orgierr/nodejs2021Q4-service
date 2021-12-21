@@ -5,14 +5,13 @@ import usersService from './user.service';
 
 export const router = new Router();
 
-router.get('/users', async (ctx) => {
-  throw new Error('sdfsddf');
-
+router.get('/users', async (ctx, next) => {
   const users = await usersService.getAll();
   ctx.body = users.map(User.toResponse);
+  next();
 });
 
-router.get('/users/:id', async (ctx) => {
+router.get('/users/:id', async (ctx, next) => {
   const params = <IdParamsType>ctx.params;
   const user = usersService.getUserById(params.id);
   if (user) {
@@ -20,17 +19,19 @@ router.get('/users/:id', async (ctx) => {
     return;
   }
   ctx.response.status = 404;
+  next();
 });
 
-router.post('/users', async (ctx) => {
+router.post('/users', async (ctx, next) => {
   const body = <User>ctx.request.body;
   const user = new User(body);
   await usersService.createUser(user);
   ctx.response.status = 201;
   ctx.body = User.toResponse(user);
+  next();
 });
 
-router.put('/users/:id', async (ctx) => {
+router.put('/users/:id', async (ctx, next) => {
   const params = <IdParamsType>ctx.params;
   ctx.request.body.id = params.id;
 
@@ -40,9 +41,10 @@ router.put('/users/:id', async (ctx) => {
     return;
   }
   ctx.response.status = 404;
+  next();
 });
 
-router.delete('/users/:id', async (ctx) => {
+router.delete('/users/:id', async (ctx, next) => {
   const params = <IdParamsType>ctx.params;
   const user = await usersService.deleteUserById(params.id);
   if (user.length) {
@@ -50,4 +52,5 @@ router.delete('/users/:id', async (ctx) => {
     return;
   }
   ctx.response.status = 404;
+  next();
 });
