@@ -10,6 +10,7 @@ import { logger } from './logger/logger';
 export const app = new Koa();
 
 app.use(errorHandler);
+
 app.use(bodyParser());
 app.use(usersRouter.routes());
 app.use(usersRouter.allowedMethods());
@@ -23,10 +24,11 @@ app.use(async (ctx, next) => {
   }
   await next();
 });
+
 app.use(loggerHandler);
 
 process.on('uncaughtException', (err) => {
-  logger.error(err.stack ?? err.message, function () {
+  logger.warn(err.stack ?? err.message, function () {
     logger.end();
     process.exit(1);
   });
@@ -34,8 +36,8 @@ process.on('uncaughtException', (err) => {
 
 process.on('unhandledRejection', (err) => {
   const error = err as Error;
-  logger.error(error.stack ?? error.message, function () {
+  logger.warn(error.stack ?? error.message, function () {
     logger.end();
-    process.exit(2);
+    process.exit(1);
   });
 });

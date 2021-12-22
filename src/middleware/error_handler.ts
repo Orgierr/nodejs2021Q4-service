@@ -19,10 +19,12 @@ export async function errorHandler(ctx: ParameterizedContext, next: Next) {
       ctx.body = ReasonPhrases.INTERNAL_SERVER_ERROR;
 
       logger.error({
+        method: ctx.method,
+        params: ctx['params'],
         url: ctx.url,
         query: ctx.query,
         body: ctx.body,
-        status: ctx.response.status,
+        responseCode: ctx.response.status,
         stack: err.stack,
       });
 

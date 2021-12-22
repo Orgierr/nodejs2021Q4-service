@@ -8,11 +8,11 @@ const levels = {
   debug: 4,
 };
 
-// const level = () => {
-//   const env = process.env['NODE_ENV'] || 'development';
-//   const isDevelopment = env === 'development';
-//   return isDevelopment ? 'debug' : 'warn';
-// };
+const level = () => {
+  const env = process.env['NODE_ENV'] || 'development';
+  const isDevelopment = env === 'development';
+  return isDevelopment ? 'debug' : 'warn';
+};
 
 const colors = {
   error: 'red',
@@ -34,20 +34,17 @@ const format = winston.format.combine(
 
 const transports = [
   new winston.transports.Console({
-    format: winston.format.combine(
-      format,
-      winston.format.colorize({ all: true })
-    ),
+    format: winston.format.combine(winston.format.colorize({ all: true })),
   }),
   new winston.transports.File({
     filename: 'logs/error.log',
     level: 'error',
   }),
-  new winston.transports.File({ filename: 'logs/all.log', level: 'http' }),
+  new winston.transports.File({ filename: 'logs/all.log' }),
 ];
 
 export const logger = winston.createLogger({
-  level: 'error',
+  level: level(),
   levels,
   format,
   transports,
