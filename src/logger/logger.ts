@@ -1,4 +1,5 @@
 import winston from 'winston';
+import { config } from '../common/config';
 
 const levels = {
   error: 0,
@@ -9,9 +10,7 @@ const levels = {
 };
 
 const level = () => {
-  const env = process.env['NODE_ENV'] || 'development';
-  const isDevelopment = env === 'development';
-  return isDevelopment ? 'debug' : 'warn';
+  return config.LOG_LEVEL || 'debug';
 };
 
 const colors = {
@@ -49,3 +48,11 @@ export const logger = winston.createLogger({
   format,
   transports,
 });
+
+winston.exceptions.handle(
+  new winston.transports.File({
+    filename: 'logs/exceptions.log',
+    level: 'error',
+    format: format,
+  })
+);

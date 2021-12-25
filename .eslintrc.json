@@ -10,10 +10,10 @@
 		"project": "tsconfig.json",
 		"tsconfigRootDir": "."
 	},
-  "parser": "@typescript-eslint/parser",
   "settings": {
     "noInlineConfig": true
   },
+  "parser": "@typescript-eslint/parser",
   "extends": [
     "google",
     "plugin:@typescript-eslint/eslint-recommended",
