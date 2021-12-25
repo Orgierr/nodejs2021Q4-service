@@ -37,4 +37,3 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (err) => {
   throw err;
 });
-throw Error('Oops!');
