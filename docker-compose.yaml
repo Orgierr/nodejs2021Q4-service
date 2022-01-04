@@ -1,0 +1,38 @@
+version: '3.3'
+services:
+  postgres:
+    restart: on-failure
+    image: postgres-image
+    build: ./docker/postgres/
+    networks:
+      - skynet
+    container_name: postgres
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/pgdata
+  node:
+    restart: on-failure
+    image: app-image
+    build:
+      context: .
+      dockerfile: ./docker/server/Dockerfile
+    networks:
+      - skynet
+    container_name: node
+    depends_on:
+      - postgres
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      POSTGRES_HOST: postgres
+    volumes:
+      - ./src:/nodejs2021Q4-service/src
+      - ./logs:/nodejs2021Q4-service/logs
+networks:
+  skynet:
+    driver: bridge
