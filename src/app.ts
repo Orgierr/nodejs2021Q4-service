@@ -6,7 +6,7 @@ import { router as tasksRouter } from './resources/tasks/task.router';
 import { errorHandler } from './middleware/error_handler';
 import { loggerHandler } from './middleware/logger_handler';
 import { logger } from './logger/logger';
-
+import './typeorm/connection';
 export const app = new Koa();
 
 app.use(errorHandler);
