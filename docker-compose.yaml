@@ -11,7 +11,7 @@ services:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     env_file: ./.env
     volumes:
-      - ./pgdata:${PGDATA}
+      - pg_data:${PGDATA}
   node:
     restart: always
     image: app-image
@@ -29,7 +29,10 @@ services:
       POSTGRES_HOST: postgres
     volumes:
       - ./src:/nodejs2021Q4-service/src
-      - ./logs:/nodejs2021Q4-service/logs
+      - app_logs:/nodejs2021Q4-service/logs
 networks:
   skynet:
     driver: bridge
+volumes:
+  app_logs:
+  pg_data:
