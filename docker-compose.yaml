@@ -14,7 +14,7 @@ services:
       - pg_data:${PGDATA}
   node:
     restart: always
-    image: app-image
+    image: docker.io/orgierr/app:latest
     build:
       context: .
       dockerfile: ./docker/server/Dockerfile
