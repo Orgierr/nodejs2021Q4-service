@@ -11,6 +11,20 @@
 git clone {repository URL}
 ```
 
+## Migrate TypeORM
+
+Generate migration
+
+```
+npm run migration:generate
+```
+
+Add tables to database
+
+```
+npm run migration:run
+```
+
 ## Run in docker
 
 ```
