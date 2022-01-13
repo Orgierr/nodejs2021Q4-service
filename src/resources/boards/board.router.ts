@@ -1,7 +1,7 @@
 import Router from 'koa-router';
 import boardService from './board.service';
-import { Board } from './board.model';
 import { IdParamsType } from '../../types/types';
+import { Board } from '../../typeorm/entitys/boards';
 export const router = new Router();
 
 router.get('/boards', async (ctx, next) => {
@@ -13,7 +13,7 @@ router.get('/boards', async (ctx, next) => {
 router.get('/boards/:id', async (ctx, next) => {
   const params = <IdParamsType>ctx.params;
 
-  const board = boardService.getBoardById(params.id);
+  const board = await boardService.getBoardById(params.id);
   if (board) {
     ctx.body = board;
     return;
@@ -23,10 +23,8 @@ router.get('/boards/:id', async (ctx, next) => {
 });
 
 router.post('/boards', async (ctx, next) => {
-  const board = new Board(ctx.request.body);
-  await boardService.createBoard(board);
+  ctx.body = await boardService.createBoard(ctx.request.body as Board);
   ctx.response.status = 201;
-  ctx.body = board;
   await next();
 });
 
@@ -44,8 +42,8 @@ router.put('/boards/:id', async (ctx, next) => {
 
 router.delete('/boards/:id', async (ctx, next) => {
   const params = <IdParamsType>ctx.params;
-  const board = await boardService.deleteBoardById(params.id);
-  if (board.length) {
+  const result = await boardService.deleteBoardById(params.id);
+  if (result.affected) {
     ctx.response.status = 204;
     return;
   }
