@@ -11,17 +11,17 @@ import { Task } from './tasks';
 @Entity({ name: 'columns' })
 export class Column {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @TableColumn()
-  title: string;
+  title!: string;
 
   @TableColumn()
-  order: number;
+  order!: number;
 
   @ManyToOne(() => Board, (board) => board.user, { onDelete: 'CASCADE' })
-  board: Board;
+  board!: Board;
 
   @OneToMany(() => Task, (task) => task.column)
-  task: Task;
+  task!: Task;
 }

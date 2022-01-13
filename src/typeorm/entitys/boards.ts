@@ -12,21 +12,21 @@ import { User } from './users';
 @Entity({ name: 'boards' })
 export class Board {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @TableColumn()
-  title: string;
+  title!: string;
 
   @OneToMany(() => Column, (column) => column.board, {
     cascade: true,
     nullable: true,
   })
   @JoinTable()
-  columns: Column[];
+  columns!: Column[];
 
   @OneToMany(() => User, (user) => user.board)
-  user: User;
+  user!: User;
 
   @OneToMany(() => Task, (task) => task.board)
-  task: Task;
+  task!: Task;
 }

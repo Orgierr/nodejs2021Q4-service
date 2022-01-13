@@ -26,7 +26,6 @@
     "skipLibCheck": true,
     "noImplicitAny": true,
     "forceConsistentCasingInFileNames": true,
-    "strictPropertyInitialization":false,
     "sourceMap": true
   },
   "exclude": [

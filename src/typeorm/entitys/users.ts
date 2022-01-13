@@ -11,22 +11,22 @@ import { Task } from './tasks';
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  login: string;
+  login!: string;
 
   @Column()
-  password: string;
+  password!: string;
 
   @OneToMany(() => Task, (task) => task.user)
-  task: Task;
+  task!: Task;
 
   @ManyToOne(() => Board, (board) => board.user)
-  board: Board;
+  board!: Board;
   /**
    * Get from user id,name,login string
    *

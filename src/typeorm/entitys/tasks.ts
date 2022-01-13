@@ -11,34 +11,34 @@ import { User } from './users';
 @Entity({ name: 'tasks' })
 export class Task {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @TableColumn()
-  title: string;
+  title!: string;
 
   @TableColumn()
-  order: number;
+  order!: number;
 
   @TableColumn()
-  description: string;
+  description!: string;
 
   @TableColumn({ nullable: true })
-  userId: string;
+  userId!: string;
 
   @TableColumn({ nullable: true })
-  boardId: string;
+  boardId!: string;
 
   @TableColumn({ nullable: true })
-  columnId: string;
+  columnId!: string;
 
   @ManyToOne(() => Column, (column) => column.task)
-  column: Column;
+  column!: Column;
 
   @ManyToOne(() => User, (user) => user.task, { onDelete: 'SET NULL' })
-  user: User;
+  user!: User;
 
   @ManyToOne(() => Board, (board) => board.task, { onDelete: 'CASCADE' })
-  board: Board;
+  board!: Board;
 
   /**
    * Get from user id, title, order, description,userId
