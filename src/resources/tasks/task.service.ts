@@ -1,42 +1,45 @@
-import { tasksRepo } from './task.memory.repository';
-import { Task } from './task.model';
+import { DeleteResult, getRepository } from 'typeorm';
+import { Task } from '../../typeorm/entitys/tasks';
 
 /**
  * Get all tasks by board id
  * @param boardId - board id (string)
- * @returns  all tasks (Task[])
+ * @returns  all tasks Promise(Task[])
  */
-const getAllTaskByBoardId = (boardId: string): Task[] =>
-  tasksRepo.filter((t) => t.boardId === boardId);
+const getAllTaskByBoardId = (boardId: string): Promise<Task[]> =>
+  getRepository(Task).find({ where: { boardId: boardId } });
+
 /**
  * Get task by boardId and taskId
  * @param  boardId - board id (string)
  * @param  taskId - task id (string)
- * @returns task (Task | undefined)
+ * @returns task Promise(Task | undefined)
  */
 const getTaskByBoardIdAndTaskId = (
   boardId: string,
   taskId: string
-): Task | undefined =>
-  tasksRepo.find((t) => t.boardId === boardId && t.id === taskId);
+): Promise<Task | undefined> =>
+  getRepository(Task).findOne({
+    where: { id: taskId, boardId: boardId },
+  });
+
 /**
  * Add new task in db
  * @param  task - new task
- * @returns task index (number)
+ * @returns created task  Promise(Task)
  */
-const createTasks = (task: Task): number => tasksRepo.push(task);
+const createTasks = (task: Task): Promise<Task> =>
+  getRepository(Task).save(task);
 /**
  * Update task
  * @param updatedTask - new task data (Task)
- * @returns new task data (Task|undefined)
+ * @returns new task data Promise(Task|undefined)
  */
-const updateTask = (updatedTask: Task) => {
-  const taskIndex = tasksRepo.findIndex(
-    (t) => t.id === updatedTask.id && t.boardId === updatedTask.boardId
-  );
-  if (taskIndex !== -1) {
-    tasksRepo[taskIndex] = updatedTask;
-    return updatedTask;
+const updateTask = async (updatedTask: Task) => {
+  const result = await getRepository(Task).update(updatedTask.id, updatedTask);
+
+  if (result.affected) {
+    return Task.toResponse(updatedTask);
   }
   return undefined;
 };
@@ -44,17 +47,10 @@ const updateTask = (updatedTask: Task) => {
  * Delete task by boardId and taskId
  * @param  boardId - board id (string)
  * @param  taskId  - task id (string)
- * @returns array deleted tasks (Task[])
+ * @returns  deleted result Promise(DeleteResult)
  */
-const deleteTask = (boardId: string, taskId: string): Task[] => {
-  const taskIndex = tasksRepo.findIndex(
-    (t) => t.id === taskId && t.boardId === boardId
-  );
-  if (taskIndex !== -1) {
-    return tasksRepo.splice(taskIndex, 1);
-  }
-  return [];
-};
+const deleteTask = (boardId: string, taskId: string): Promise<DeleteResult> =>
+  getRepository(Task).delete({ boardId: boardId, id: taskId });
 export default {
   getAllTaskByBoardId,
   getTaskByBoardIdAndTaskId,
