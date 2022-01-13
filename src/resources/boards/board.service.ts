@@ -1,35 +1,41 @@
-import { boardsRepo } from './board.memory.repository';
-import { tasksRepo } from '../tasks/task.memory.repository';
-import { Board } from './board.model';
+import { DeleteResult, getConnection, getRepository } from 'typeorm';
+import { Board } from '../../typeorm/entitys/boards';
+
 /**
  * Get all boards
  * @returns all boards (Board[])
  */
-const getAll = (): Board[] => boardsRepo;
+const getAll = (): Promise<Board[]> =>
+  getRepository(Board)
+    .createQueryBuilder('boards')
+    .leftJoinAndSelect('boards.columns', 'column')
+    .orderBy('column.order', 'ASC')
+    .getMany();
+
 /**
  * Add new user in db
  * @param board - board instance (Board)
- * @returns board index (number)
+ * @returns created board (Board)
  */
-const createBoard = (board: Board): number => boardsRepo.push(board);
+const createBoard = (board: Board): Promise<Board> =>
+  getConnection().getRepository(Board).save(board);
 /**
  * Get board by id
  * @param  id - board id (string)
- * @returns  board by id  (Board | undefined)
+ * @returns  board by id  Promise(Board | undefined)
  */
-const getBoardById = (id: string): Board | undefined => {
-  const board = boardsRepo.find((b) => b.id === id);
-  return board;
+const getBoardById = (id: string): Promise<Board | undefined> => {
+  return getRepository(Board).findOne({ id: id }, { relations: ['columns'] });
 };
 /**
  * Update board
  * @param updatedBoard - new board data (Board)
- * @returns  new board data (Board|undefined)
+ * @returns  new board data Promise(Board|undefined)
  */
-const updateBoard = (updatedBoard: Board): Board | undefined => {
-  const boardIndex = boardsRepo.findIndex((b) => b.id === updatedBoard.id);
-  if (boardIndex !== -1) {
-    boardsRepo[boardIndex] = updatedBoard;
+const updateBoard = async (updatedBoard: Board): Promise<Board | undefined> => {
+  const result = await getRepository(Board).save(updatedBoard);
+
+  if (result.id) {
     return updatedBoard;
   }
   return undefined;
@@ -37,20 +43,10 @@ const updateBoard = (updatedBoard: Board): Board | undefined => {
 /**
  * Delete board by id
  * @param  id - board id (string)
- * @returns array deleted boards (Board[])
+ * @returns  deleted result Promise(DeleteResult)
  */
-const deleteBoardById = (id: string): Board[] => {
-  const boardIndex = boardsRepo.findIndex((b) => b.id === id);
-  if (boardIndex !== -1) {
-    for (let index = tasksRepo.length - 1; index >= 0; index -= 1) {
-      if (tasksRepo[index]?.boardId === id) {
-        tasksRepo.splice(index, 1);
-      }
-    }
-
-    return boardsRepo.splice(boardIndex, 1);
-  }
-  return [];
+const deleteBoardById = async (id: string): Promise<DeleteResult> => {
+  return getRepository(Board).delete({ id: id });
 };
 export default {
   getAll,
