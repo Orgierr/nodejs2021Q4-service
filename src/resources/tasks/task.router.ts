@@ -1,13 +1,13 @@
 import Router from 'koa-router';
 export const router = new Router();
 import tasksService from './task.service';
-import { Task } from './task.model';
 import { TaskParamsType } from '../../types/types';
+import { Task } from '../../typeorm/entitys/tasks';
 
 router.get('/boards/:boardId/tasks', async (ctx, next) => {
   const params = <TaskParamsType>ctx.params;
   const tasks = await tasksService.getAllTaskByBoardId(params.boardId);
-  ctx.body = tasks.map((task) => task);
+  ctx.body = tasks;
   await next();
 });
 
@@ -28,10 +28,11 @@ router.get('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
 router.post('/boards/:boardId/tasks', async (ctx, next) => {
   const params = <TaskParamsType>ctx.params;
   ctx.request.body.boardId = params.boardId;
-  const task = new Task(ctx.request.body);
-  await tasksService.createTasks(task);
+  const task = await tasksService.createTasks(ctx.request.body as Task);
+
   ctx.response.status = 201;
   ctx.body = task;
+
   await next();
 });
 
@@ -50,8 +51,8 @@ router.put('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
 
 router.delete('/boards/:boardId/tasks/:taskId', async (ctx, next) => {
   const params = <TaskParamsType>ctx.params;
-  const task = await tasksService.deleteTask(params.boardId, params.taskId);
-  if (task.length) {
+  const result = await tasksService.deleteTask(params.boardId, params.taskId);
+  if (result.affected) {
     ctx.response.status = 204;
     return;
   }
