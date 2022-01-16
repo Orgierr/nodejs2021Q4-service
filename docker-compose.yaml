@@ -7,9 +7,9 @@ services:
     networks:
       - skynet
     container_name: postgres
+    command: postgres -c logging_collector=on
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    env_file: ./.env
     volumes:
       - pg_data:${PGDATA}
   node:
@@ -30,6 +30,7 @@ services:
     volumes:
       - ./src:/nodejs2021Q4-service/src
       - app_logs:/nodejs2021Q4-service/logs
+      - postgres_logs_logs:/var/log/postgresql
 networks:
   skynet:
     driver: bridge
