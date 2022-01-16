@@ -11,6 +11,30 @@
 git clone {repository URL}
 ```
 
+## Migrate TypeORM
+
+Generate migration
+
+```
+npm run migration:generate
+```
+
+Add tables to database
+
+```
+npm run migration:run
+```
+
+## Run in docker
+
+```
+cd {repository name}
+```
+
+```
+docker-compose up --build
+```
+
 ## Installing NPM modules
 
 ```
