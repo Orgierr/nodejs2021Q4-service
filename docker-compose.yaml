@@ -9,6 +9,8 @@ services:
     container_name: postgres
     command: postgres -c logging_collector=on
     env_file: ./.env
+    environment:
+      PGPORT: ${POSTGRES_PORT}
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
