@@ -8,6 +8,7 @@ services:
       - skynet
     container_name: postgres
     command: postgres -c logging_collector=on
+    env_file: ./.env
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
