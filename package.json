@@ -17,7 +17,6 @@
     "migration:tables": "npm run typeorm -- migration:generate --name CreateTables",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert"
-
   },
   "keywords": [
     "rs",
@@ -50,6 +49,7 @@
   },
   "dependencies": {
     "@types/node": "^17.0.7",
+    "bcrypt": "^5.0.1",
     "cross-env": "7.0.3",
     "dotenv": "10.0.0",
     "koa": "^2.13.4",
