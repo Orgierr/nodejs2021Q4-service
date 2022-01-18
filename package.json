@@ -52,6 +52,7 @@
     "bcrypt": "^5.0.1",
     "cross-env": "7.0.3",
     "dotenv": "10.0.0",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.1.1",
@@ -64,6 +65,7 @@
     "yamljs": "0.3.0"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/koa-bodyparser": "^4.3.4",
     "@types/koa-router": "^7.4.4",
     "@types/pg": "^8.6.3",
