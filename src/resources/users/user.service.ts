@@ -1,6 +1,6 @@
 import { DeleteResult, getRepository } from 'typeorm';
 import { User } from '../../typeorm/entitys/users';
-
+import { getPasswordHash } from '../../utils/password_hash';
 const returnedColumn: (keyof User)[] = ['id', 'login', 'name'];
 
 /**
@@ -16,6 +16,7 @@ const getAll = (): Promise<User[]> =>
  * @returns user to response Promise(User.toResponse)
  */
 const createUser = async (user: User) => {
+  user.password = await getPasswordHash(user.password);
   return User.toResponse(await getRepository(User).save(user));
 };
 /**
@@ -43,6 +44,7 @@ const deleteUserById = async (id: string): Promise<DeleteResult> => {
  * @returns  user to response Promise(User.toResponse|undefined)
  */
 const updateUser = async (updatedUser: User) => {
+  updatedUser.password = await getPasswordHash(updatedUser.password);
   const result = await getRepository(User).update(updatedUser.id, updatedUser);
   if (result.affected) {
     return User.toResponse(updatedUser);

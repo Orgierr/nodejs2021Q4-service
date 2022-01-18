@@ -65,6 +65,7 @@
     "yamljs": "0.3.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/koa-bodyparser": "^4.3.4",
     "@types/koa-router": "^7.4.4",
