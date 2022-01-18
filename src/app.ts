@@ -7,11 +7,12 @@ import { errorHandler } from './middleware/error_handler';
 import { loggerHandler } from './middleware/logger_handler';
 import { logger } from './logger/logger';
 import './typeorm/connection';
+import auth from './middleware/auth';
 export const app = new Koa();
 
 app.use(errorHandler);
-
 app.use(bodyParser());
+app.use(auth);
 app.use(usersRouter.routes());
 app.use(usersRouter.allowedMethods());
 app.use(boardsRouter.routes());
