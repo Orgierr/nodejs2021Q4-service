@@ -1,4 +1,12 @@
-import { createConnection } from 'typeorm';
+import { createConnection, getRepository } from 'typeorm';
 import { logger } from '../logger/logger';
+import { User } from './entitys/users';
 
-createConnection().then((_) => logger.info('Postgres connected'));
+createConnection().then(async (_) => {
+  await getRepository(User).save({
+    login: 'admin',
+    password: 'admin',
+    name: 'Foo',
+  });
+  logger.info('Postgres connected');
+});
