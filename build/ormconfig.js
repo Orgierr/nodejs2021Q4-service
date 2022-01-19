@@ -7,7 +7,8 @@ exports.default = {
     database: process.env['POSTGRES_DB'],
     username: process.env['POSTGRES_USER'],
     password: process.env['POSTGRES_PASSWORD'],
-    synchronize: true,
+    synchronize: false,
+    migrationsRun: true,
     entities: ['./src/typeorm/entitys/*.ts'],
     migrations: ['./src/typeorm/migrations/*.ts'],
     cli: {

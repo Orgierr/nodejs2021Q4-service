@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const users_1 = require("../../typeorm/entitys/users");
+const password_hash_1 = require("../../utils/password_hash");
 const returnedColumn = ['id', 'login', 'name'];
 /**
  *Get all users
@@ -14,6 +15,7 @@ const getAll = () => (0, typeorm_1.getRepository)(users_1.User).find({ select: r
  * @returns user to response Promise(User.toResponse)
  */
 const createUser = async (user) => {
+    user.password = await (0, password_hash_1.getPasswordHash)(user.password);
     return users_1.User.toResponse(await (0, typeorm_1.getRepository)(users_1.User).save(user));
 };
 /**
@@ -41,6 +43,7 @@ const deleteUserById = async (id) => {
  * @returns  user to response Promise(User.toResponse|undefined)
  */
 const updateUser = async (updatedUser) => {
+    updatedUser.password = await (0, password_hash_1.getPasswordHash)(updatedUser.password);
     const result = await (0, typeorm_1.getRepository)(users_1.User).update(updatedUser.id, updatedUser);
     if (result.affected) {
         return users_1.User.toResponse(updatedUser);

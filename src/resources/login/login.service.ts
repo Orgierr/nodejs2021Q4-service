@@ -1,6 +1,5 @@
 import { getRepository } from 'typeorm';
 import { User } from '../../typeorm/entitys/users';
-import { getPasswordHash } from '../../utils/password_hash';
 
 /**
  * Get user  by login and password
@@ -13,6 +12,6 @@ export const getUserByLoginAndPassword = async (
   await getRepository(User).findOne({
     where: {
       login: login,
-      password: await getPasswordHash(password),
+      password: password,
     },
   });
