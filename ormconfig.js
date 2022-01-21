@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   type: 'postgres',
   host: process.env['POSTGRES_HOST'],
   port: process.env['POSTGRES_PORT'],
@@ -6,11 +6,12 @@ export default {
   username: process.env['POSTGRES_USER'],
   password: process.env['POSTGRES_PASSWORD'],
   synchronize: false,
-  migrationsRun: true,
-  entities: ['./src/typeorm/entitys/*.ts'],
-  migrations: ['./src/typeorm/migrations/*.ts'],
+  // synchronize: false,
+  // migrationsRun: true,
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  migrations: ['src/migrations/*{.ts,.js}'],
   cli: {
-    entitiesDir: './src/typeorm/entitys/',
-    migrationsDir: './src/typeorm/migrations/',
+    entitiesDir: 'dist/**/*.entity{.ts,.js}',
+    migrationsDir: 'src/migrations',
   },
 };
