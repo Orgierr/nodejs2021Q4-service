@@ -1,39 +1,21 @@
 {
   "compilerOptions": {
-    "target": "es2020",
     "module": "commonjs",
-    "allowJs": false,
-    "outDir": "./build",
-    "rootDir": "./",
-    "baseUrl": "./",
-    "paths": {
-      "../*": [
-        "./*"
-      ],
-    },
-    "downlevelIteration": false,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
+    "declaration": true,
+    "removeComments": true,
     "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
     "skipLibCheck": true,
-    "noImplicitAny": true,
-    "forceConsistentCasingInFileNames": true,
-    "sourceMap": true
-  },
-  "exclude": [
-    "node_modules/"
-  ],
-  "include": [
-    "./src/**/*.ts",
-    "ormconfig.ts"
-
-  ]
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
+  }
 }
