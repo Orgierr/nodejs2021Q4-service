@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Crypt } from 'src/crypt/crypt';
 
 const returnedColumn: (keyof User)[] = ['id', 'login', 'name'];
 
@@ -10,6 +11,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private crypt: Crypt,
   ) {}
   /**
    * Add new user in db
@@ -17,6 +19,8 @@ export class UsersService {
    * @returns user to response Promise(User.toResponse)
    */
   async create(user: User) {
+    user.password = await this.crypt.getPasswordHash(user.password);
+
     return User.toResponse(await this.usersRepository.save(user));
   }
   /**
@@ -43,6 +47,10 @@ export class UsersService {
    * @returns  user to response Promise(User.toResponse|undefined)
    */
   async update(updatedUser: User) {
+    updatedUser.password = await this.crypt.getPasswordHash(
+      updatedUser.password,
+    );
+
     const result = await this.usersRepository.update(
       updatedUser.id,
       updatedUser,
