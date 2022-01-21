@@ -15,7 +15,7 @@ export class TasksService {
    * @returns created task  Promise(Task)
    */
   createTasks(task: Task) {
-    this.tasksRepository.save(task);
+    return this.tasksRepository.save(task);
   }
   /**
    * Get all tasks by board id

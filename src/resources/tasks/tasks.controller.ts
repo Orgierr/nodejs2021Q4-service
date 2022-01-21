@@ -13,7 +13,7 @@ import { Task } from './entities/task.entity';
 import { TasksService } from './tasks.service';
 import { StatusCodes } from 'http-status-codes';
 
-@Controller('tasks')
+@Controller()
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
@@ -60,7 +60,7 @@ export class TasksController {
   }
 
   @Delete('/boards/:boardId/tasks/:taskId')
-  @HttpCode(StatusCodes.CREATED)
+  @HttpCode(StatusCodes.NO_CONTENT)
   async deleteTask(
     @Param('boardId') boardId: string,
     @Param('taskId') taskId: string,
