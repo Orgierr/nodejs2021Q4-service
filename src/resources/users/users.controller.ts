@@ -3,40 +3,57 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
+  HttpCode,
+  NotFoundException,
 } from '@nestjs/common';
+import { StatusCodes } from 'http-status-codes';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  @Get()
+  async findAll() {
+    return await this.usersService.findAll();
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @Post()
+  @HttpCode(StatusCodes.CREATED)
+  async create(@Body() user: User) {
+    return await this.usersService.create(user);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const user: User | undefined = await this.usersService.findOne(id);
+    if (user) {
+      return user;
+    }
+    throw new NotFoundException();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() updatedUser: User) {
+    updatedUser.id = id;
+    const user = await this.usersService.update(updatedUser);
+    if (user) {
+      return user;
+    }
+    throw new NotFoundException();
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @HttpCode(StatusCodes.NO_CONTENT)
+  async remove(@Param('id') id: string) {
+    const result = await this.usersService.remove(id);
+    if (!result.affected) {
+      throw new NotFoundException();
+    }
+    return;
   }
 }
