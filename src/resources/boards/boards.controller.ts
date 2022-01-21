@@ -8,12 +8,15 @@ import {
   HttpCode,
   NotFoundException,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { StatusCodes } from 'http-status-codes';
 
 import { Board } from './entities/board.entity';
+import { AuthGuard } from 'src/guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('boards')
 export class BoardsController {
   constructor(private readonly boardsService: BoardsService) {}

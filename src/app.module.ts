@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TasksModule } from './resources/tasks/tasks.module';
 import { BoardsModule } from './resources/boards/boards.module';
 import { LoginModule } from './resources/login/login.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
