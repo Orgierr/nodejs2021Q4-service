@@ -6,8 +6,7 @@ export const winstonConfig = {
   format: winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
     winston.format.printf(
-      (info) =>
-        `${info['timestamp']} ${info.level}: ${JSON.stringify(info.message)}`,
+      (info) => `${info['timestamp']} ${info.level}: ${info.message}`,
     ),
     winston.format.json(),
   ),
