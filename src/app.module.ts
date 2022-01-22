@@ -5,8 +5,6 @@ import { TasksModule } from './resources/tasks/tasks.module';
 import { BoardsModule } from './resources/boards/boards.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { LoginModule } from './resources/login/login.module';
-import { WinstonModule } from 'nest-winston';
-import { winstonConfig } from './common/winston_config';
 
 @Module({
   imports: [
@@ -15,7 +13,6 @@ import { winstonConfig } from './common/winston_config';
     TasksModule,
     BoardsModule,
     LoginModule,
-    WinstonModule.forRoot(winstonConfig),
   ],
   controllers: [],
   providers: [Logger],

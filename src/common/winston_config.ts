@@ -2,7 +2,13 @@ import * as winston from 'winston';
 import { config } from './config';
 export const winstonConfig = {
   level: config.LOG_LEVEL || 'debug',
-
+  levels: {
+    error: 0,
+    warn: 1,
+    verbose: 2,
+    info: 3,
+    debug: 4,
+  },
   format: winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
     winston.format.printf(

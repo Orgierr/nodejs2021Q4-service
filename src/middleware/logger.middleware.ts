@@ -3,14 +3,14 @@ import {
   Injectable,
   NestMiddleware,
   LoggerService,
+  Logger,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   constructor(
-    @Inject(WINSTON_MODULE_PROVIDER)
+    @Inject(Logger)
     private readonly logger: LoggerService,
   ) {}
   use(req: Request, res: Response, next: NextFunction) {
