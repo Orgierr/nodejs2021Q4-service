@@ -5,12 +5,12 @@ module.exports = {
   database: process.env['POSTGRES_DB'],
   username: process.env['POSTGRES_USER'],
   password: process.env['POSTGRES_PASSWORD'],
-  synchronize: true,
-  // migrationsRun: true,
+  synchronize: false,
+  migrationsRun: true,
   entities: ['dist/**/*.entity{.ts,.js}'],
-  // migrations: ['dist/migrations/*{.ts,.js}'],
+  migrations: ['dist/migrations/*{.ts,.js}'],
   cli: {
     entitiesDir: 'dist/**/*.entity{.ts,.js}',
-    // migrationsDir: 'dist/migrations',
+    migrationsDir: 'dist/migrations',
   },
 };

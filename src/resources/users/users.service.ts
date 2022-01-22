@@ -12,7 +12,15 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private crypt: Crypt,
-  ) {}
+  ) {
+    (async function () {
+      this.usersRepository.save({
+        login: 'admin',
+        password: await this.crypt.getPasswordHash('admin'),
+        name: 'Foo',
+      });
+    }.call(this));
+  }
   /**
    * Add new user in db
    * @param user - new user (User)

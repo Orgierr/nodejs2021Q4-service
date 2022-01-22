@@ -26,12 +26,13 @@ export class LoginService {
       if (!isPassword) {
         throw new ForbiddenException();
       }
+      return {
+        token: this.jwtService.sign({
+          userId: user.id,
+          login: user.login,
+        }),
+      };
     }
-    return {
-      token: this.jwtService.sign({
-        userId: user.id,
-        login: user.login,
-      }),
-    };
+    throw new ForbiddenException();
   }
 }
