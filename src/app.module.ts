@@ -5,6 +5,7 @@ import { TasksModule } from './resources/tasks/tasks.module';
 import { BoardsModule } from './resources/boards/boards.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { LoginModule } from './resources/login/login.module';
+import { UnhandledError } from './unhandledError/unhandled_error';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { LoginModule } from './resources/login/login.module';
     LoginModule,
   ],
   controllers: [],
-  providers: [Logger],
+  providers: [Logger, UnhandledError],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

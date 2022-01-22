@@ -25,5 +25,10 @@ export const winstonConfig = {
       level: 'error',
     }),
     new winston.transports.File({ filename: 'logs/all.log' }),
+    new winston.transports.File({
+      filename: 'logs/exceptions.log',
+      level: 'error',
+      handleExceptions: true,
+    }),
   ],
 };

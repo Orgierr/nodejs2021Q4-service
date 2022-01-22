@@ -19,7 +19,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     private readonly logger: LoggerService,
   ) {}
 
-  catch(exception: HttpException, host: ArgumentsHost): void {
+  catch(exception: HttpException | unknown, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
@@ -32,7 +32,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const responseBody = {
       statusCode: httpStatus,
-      message: exception.message || ReasonPhrases.INTERNAL_SERVER_ERROR,
+      message:
+        exception instanceof HttpException
+          ? exception.getResponse()
+          : ReasonPhrases.INTERNAL_SERVER_ERROR,
     };
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
