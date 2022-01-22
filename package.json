@@ -30,6 +30,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^8.1.0",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/platform-fastify": "^8.2.6",
     "@nestjs/typeorm": "^8.0.3",
     "bcrypt": "^5.0.1",
     "cross-env": "^7.0.3",

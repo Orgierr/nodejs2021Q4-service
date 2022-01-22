@@ -17,4 +17,5 @@ export const config = {
   POSTGRES_PASSWORD: process.env['POSTGRES_PASSWORD'],
   POSTGRES_HOST: process.env['POSTGRES_HOST'],
   POSTGRES_DB: process.env['POSTGRES_DB'],
+  USE_FASTIFY: process.env['USE_FASTIFY'],
 };
