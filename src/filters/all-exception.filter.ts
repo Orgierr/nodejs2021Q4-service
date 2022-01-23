@@ -40,13 +40,24 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
 
-    this.logger.error({
-      method: req.method,
-      params: req.params,
-      url: req.url,
-      query: req.query,
-      body: req.body,
-      responseCode: res.statusCode,
-    });
+    if (exception instanceof HttpException) {
+      this.logger.warn({
+        method: req.method,
+        params: req.params,
+        url: req.url,
+        query: req.query,
+        body: req.body,
+        responseCode: res.statusCode,
+      });
+    } else {
+      this.logger.error({
+        method: req.method,
+        params: req.params,
+        url: req.url,
+        query: req.query,
+        body: req.body,
+        responseCode: res.statusCode,
+      });
+    }
   }
 }

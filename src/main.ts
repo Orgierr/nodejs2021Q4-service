@@ -7,12 +7,14 @@ import { AllExceptionsFilter } from './filters/all-exception.filter';
 import { ExpressAdapter } from '@nestjs/platform-express/adapters';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Logger } from '@nestjs/common';
+import { AllInterceptorInterceptor } from './interceptors/all-interceptor.interceptor';
 async function bootstrap() {
   const HttpAdapter = config.USE_FASTIFY ? FastifyAdapter : ExpressAdapter;
   const app = await NestFactory.create(AppModule, new HttpAdapter());
   app.useLogger(WinstonModule.createLogger(winstonConfig));
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter, Logger));
+  app.useGlobalInterceptors(new AllInterceptorInterceptor(Logger));
   await app.listen(config.PORT || 4000);
 }
 bootstrap();

@@ -17,8 +17,11 @@ export class AuthGuard implements CanActivate {
       .switchToHttp()
       .getRequest()
       .headers.authorization?.split(' ')[1];
-
-    if (!token || !this.jwtService.verify(token)) {
+    try {
+      if (!token || !this.jwtService.verify(token)) {
+        throw new UnauthorizedException();
+      }
+    } catch (error) {
       throw new UnauthorizedException();
     }
     return true;
