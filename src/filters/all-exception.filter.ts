@@ -35,7 +35,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: httpStatus,
       message:
         exception instanceof HttpException
-          ? exception.getResponse()['message']
+          ? exception.message
           : ReasonPhrases.INTERNAL_SERVER_ERROR,
     };
 

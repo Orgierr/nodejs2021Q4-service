@@ -13,13 +13,13 @@ export class UsersService {
     private usersRepository: Repository<User>,
     private crypt: Crypt,
   ) {
-    (async function () {
+    (async () => {
       this.usersRepository.save({
         login: 'admin',
         password: await this.crypt.getPasswordHash('admin'),
         name: 'Foo',
       });
-    }.call(this));
+    })();
   }
   /**
    * Add new user in db

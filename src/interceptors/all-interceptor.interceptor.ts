@@ -15,13 +15,13 @@ export class AllInterceptorInterceptor implements NestInterceptor {
     @Inject(Logger)
     private readonly logger: LoggerService,
   ) {}
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
 
     return next.handle().pipe(
-      tap((_) =>
-        this.logger.debug({
+      tap(() =>
+        this.logger.debug!({
           method: req.method,
           params: req.params,
           url: req.originalUrl,
