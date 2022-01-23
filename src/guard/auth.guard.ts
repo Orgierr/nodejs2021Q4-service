@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -15,7 +16,7 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const token = context
       .switchToHttp()
-      .getRequest()
+      .getRequest<Request>()
       .headers.authorization?.split(' ')[1];
     try {
       if (!token || !this.jwtService.verify(token)) {

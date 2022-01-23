@@ -10,6 +10,7 @@ import {
 import { HttpAdapterHost } from '@nestjs/core';
 import { ReasonPhrases } from 'http-status-codes';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Response, Request } from 'express';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -23,8 +24,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
-    const req = ctx.getRequest();
-    const res = ctx.getResponse();
+    const req = ctx.getRequest<Request>();
+    const res = ctx.getResponse<Response>();
     const httpStatus =
       exception instanceof HttpException
         ? exception.getStatus()

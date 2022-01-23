@@ -8,7 +8,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
-
+import { Response, Request } from 'express';
 @Injectable()
 export class AllInterceptorInterceptor implements NestInterceptor {
   constructor(
@@ -16,8 +16,8 @@ export class AllInterceptorInterceptor implements NestInterceptor {
     private readonly logger: LoggerService,
   ) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const req = context.switchToHttp().getRequest();
-    const res = context.switchToHttp().getResponse();
+    const req = context.switchToHttp().getRequest<Request>();
+    const res = context.switchToHttp().getResponse<Response>();
 
     return next.handle().pipe(
       tap((_) =>
