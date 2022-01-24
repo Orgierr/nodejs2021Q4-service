@@ -10,10 +10,11 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { Task } from './entities/task.entity';
 import { TasksService } from './tasks.service';
 import { StatusCodes } from 'http-status-codes';
 import { AuthGuard } from 'src/guard/auth.guard';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @UseGuards(AuthGuard)
 @Controller()
@@ -22,7 +23,10 @@ export class TasksController {
 
   @Post('/boards/:boardId/tasks')
   @HttpCode(StatusCodes.CREATED)
-  async createTasks(@Param('boardId') boardId: string, @Body() task: Task) {
+  async createTasks(
+    @Param('boardId') boardId: string,
+    @Body() task: CreateTaskDto,
+  ) {
     task.boardId = boardId;
     return await this.tasksService.createTasks(task);
   }
@@ -51,7 +55,7 @@ export class TasksController {
   async updateTask(
     @Param('boardId') boardId: string,
     @Param('taskId') taskId: string,
-    @Body() updatedTask: Task,
+    @Body() updatedTask: UpdateTaskDto,
   ) {
     updatedTask.id = taskId;
     updatedTask.boardId = boardId;

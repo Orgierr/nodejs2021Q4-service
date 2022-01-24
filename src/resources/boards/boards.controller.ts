@@ -13,8 +13,9 @@ import {
 import { BoardsService } from './boards.service';
 import { StatusCodes } from 'http-status-codes';
 
-import { Board } from './entities/board.entity';
 import { AuthGuard } from 'src/guard/auth.guard';
+import { CreateBoardDto } from './dto/create-board.dto';
+import { UpdateBoardDto } from './dto/update-board.dto';
 
 @UseGuards(AuthGuard)
 @Controller('boards')
@@ -23,7 +24,7 @@ export class BoardsController {
 
   @Post()
   @HttpCode(StatusCodes.CREATED)
-  async createBoard(@Body() board: Board) {
+  async createBoard(@Body() board: CreateBoardDto) {
     return await this.boardsService.createBoard(board);
   }
 
@@ -42,7 +43,10 @@ export class BoardsController {
   }
 
   @Put(':id')
-  async updateBoard(@Param('id') id: string, @Body() updatedBoard: Board) {
+  async updateBoard(
+    @Param('id') id: string,
+    @Body() updatedBoard: UpdateBoardDto,
+  ) {
     updatedBoard.id = id;
     const board = await this.boardsService.updateBoard(updatedBoard);
     if (!board) {

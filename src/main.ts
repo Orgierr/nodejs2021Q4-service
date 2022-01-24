@@ -6,7 +6,7 @@ import { winstonConfig } from './common/winston_config';
 import { AllExceptionsFilter } from './filters/all-exception.filter';
 import { ExpressAdapter } from '@nestjs/platform-express/adapters';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { AllInterceptorInterceptor } from './interceptors/all-interceptor.interceptor';
 async function bootstrap() {
   const HttpAdapter = config.USE_FASTIFY ? FastifyAdapter : ExpressAdapter;
@@ -15,6 +15,7 @@ async function bootstrap() {
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter, Logger));
   app.useGlobalInterceptors(new AllInterceptorInterceptor(Logger));
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(config.PORT || 4000);
 }
 bootstrap();

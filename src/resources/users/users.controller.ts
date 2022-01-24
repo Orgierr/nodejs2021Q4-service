@@ -14,6 +14,8 @@ import { StatusCodes } from 'http-status-codes';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { AuthGuard } from 'src/guard/auth.guard';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @UseGuards(AuthGuard)
 @Controller('users')
@@ -27,7 +29,7 @@ export class UsersController {
 
   @Post()
   @HttpCode(StatusCodes.CREATED)
-  async create(@Body() user: User) {
+  async create(@Body() user: CreateUserDto) {
     return await this.usersService.create(user);
   }
 
@@ -41,7 +43,7 @@ export class UsersController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updatedUser: User) {
+  async update(@Param('id') id: string, @Body() updatedUser: UpdateUserDto) {
     updatedUser.id = id;
     const user = await this.usersService.update(updatedUser);
     if (user) {

@@ -6,6 +6,7 @@ import {
   Column as TableColumn,
   ManyToOne,
 } from 'typeorm';
+import { UpdateTaskDto } from '../dto/update-task.dto';
 
 @Entity({ name: 'tasks' })
 export class Task {
@@ -42,7 +43,7 @@ export class Task {
    * @param  task - task to destruct
    * @returns id string, title string, order number|null, description string, userId string
    */
-  static toResponse(task: Task) {
+  static toResponse(task: Task | UpdateTaskDto) {
     const { id, title, order, description, userId } = task;
     return { id, title, order, description, userId };
   }
