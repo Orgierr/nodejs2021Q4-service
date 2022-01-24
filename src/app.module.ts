@@ -5,6 +5,7 @@ import { TasksModule } from './resources/tasks/tasks.module';
 import { BoardsModule } from './resources/boards/boards.module';
 import { LoginModule } from './resources/login/login.module';
 import { UnhandledError } from './unhandledError/unhandled_error';
+import { FileModule } from './resources/file/file.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UnhandledError } from './unhandledError/unhandled_error';
     TasksModule,
     BoardsModule,
     LoginModule,
+    FileModule,
   ],
   controllers: [],
   providers: [Logger, UnhandledError],
