@@ -26,6 +26,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const req = ctx.getRequest<Request>();
     const res = ctx.getResponse<Response>();
+    const httpStatus =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const responseBody =
       exception instanceof HttpException
@@ -35,7 +39,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
             error: ReasonPhrases.INTERNAL_SERVER_ERROR,
           };
 
-    httpAdapter.reply(ctx.getResponse(), responseBody);
+    httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
 
     if (exception instanceof HttpException) {
       this.logger.warn({
