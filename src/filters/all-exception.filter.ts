@@ -9,14 +9,13 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ReasonPhrases } from 'http-status-codes';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Response, Request } from 'express';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(
     @Inject() private readonly httpAdapterHost: HttpAdapterHost,
-    @Inject(WINSTON_MODULE_PROVIDER)
+    @Inject()
     private readonly logger: LoggerService,
   ) {}
 
@@ -26,20 +25,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const req = ctx.getRequest<Request>();
     const res = ctx.getResponse<Response>();
-    const httpStatus =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-
-    const responseBody =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : {
-            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: ReasonPhrases.INTERNAL_SERVER_ERROR,
-          };
-
-    httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
 
     if (exception instanceof HttpException) {
       this.logger.warn({
@@ -50,6 +35,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
         body: req.body,
         responseCode: res.statusCode,
       });
+
+      httpAdapter.reply(
+        ctx.getResponse(),
+        exception.getResponse(),
+        exception.getStatus(),
+      );
     } else {
       this.logger.error({
         method: req.method,
@@ -59,6 +50,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
         body: req.body,
         responseCode: res.statusCode,
       });
+      httpAdapter.reply(
+        ctx.getResponse(),
+        {
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
