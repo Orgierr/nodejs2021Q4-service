@@ -6,6 +6,7 @@ import { BoardsModule } from './resources/boards/boards.module';
 import { LoginModule } from './resources/login/login.module';
 import { UnhandledError } from './unhandledError/unhandled_error';
 import { FileModule } from './resources/file/file.module';
+import { JwtAppModule } from './jwt-app/jwt-app.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FileModule } from './resources/file/file.module';
     BoardsModule,
     LoginModule,
     FileModule,
+    JwtAppModule,
   ],
   controllers: [],
   providers: [Logger, UnhandledError],
