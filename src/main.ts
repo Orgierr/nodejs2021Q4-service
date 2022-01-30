@@ -12,6 +12,9 @@ import {
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { AllInterceptorInterceptor } from './interceptors/all-interceptor.interceptor';
 import { contentParser } from 'fastify-file-interceptor';
+import YAML from 'yamljs';
+import { SwaggerModule } from '@nestjs/swagger';
+import path from 'path';
 async function bootstrap() {
   const HttpAdapter = config.USE_FASTIFY ? FastifyAdapter : ExpressAdapter;
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -26,6 +29,10 @@ async function bootstrap() {
   if (config.USE_FASTIFY) {
     app.register(contentParser);
   }
+
+  const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
+  SwaggerModule.setup('/doc', app, swaggerDocument);
+
   await app.listen(config.PORT || 4000);
 }
 bootstrap();
