@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Get,
   Param,
@@ -12,14 +13,14 @@ import { diskStorage } from 'multer';
 import { join } from 'path';
 import { Response } from 'express';
 import { AuthGuard } from 'src/guard/auth.guard';
-import { AnyFilesInterceptor } from '@nestjs/platform-express/multer/interceptors/any-files.interceptor';
+import AppAnyFilesInterceptor from 'src/interceptors/any-files.interceptor';
 
 @UseGuards(AuthGuard)
 @Controller('file')
 export class FileController {
   @Post()
   @UseInterceptors(
-    AnyFilesInterceptor({
+    AppAnyFilesInterceptor({
       storage: diskStorage({
         destination: './static',
         filename: (_, file, cb) => {
@@ -34,7 +35,13 @@ export class FileController {
 
   @Get(':fileName')
   getFile(@Param('fileName') fileName: string, @Res() res: Response) {
-    const file = createReadStream(join(process.cwd(), `/static/${fileName}`));
-    file.pipe(res);
+    try {
+      const file = createReadStream(
+        join(process.cwd(), `/static/${fileName}`),
+      ).on('error', () => null);
+      file.pipe(res).on('error', () => null);
+    } catch (error) {
+      throw new BadRequestException();
+    }
   }
 }

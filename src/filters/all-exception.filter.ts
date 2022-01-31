@@ -9,7 +9,8 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ReasonPhrases } from 'http-status-codes';
-import { Response, Request } from 'express';
+import { Request } from 'express';
+import { ExeptionResponse } from 'src/types/types';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -19,13 +20,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
     private readonly logger: LoggerService,
   ) {}
 
-  catch(exception: HttpException | unknown, host: ArgumentsHost): void {
+  catch(exception: HttpException, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
     const req = ctx.getRequest<Request>();
-    const res = ctx.getResponse<Response>();
-
+    const exeptionRes = exception.getResponse() as ExeptionResponse;
     if (exception instanceof HttpException) {
       this.logger.warn({
         method: req.method,
@@ -33,7 +33,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         url: req.url,
         query: req.query,
         body: req.body,
-        responseCode: res.statusCode,
+        responseCode: exeptionRes.statusCode,
       });
 
       httpAdapter.reply(
@@ -48,7 +48,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         url: req.url,
         query: req.query,
         body: req.body,
-        responseCode: res.statusCode,
+        responseCode: HttpStatus.INTERNAL_SERVER_ERROR,
       });
       httpAdapter.reply(
         ctx.getResponse(),
