@@ -33,6 +33,6 @@ async function bootstrap() {
   const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
   SwaggerModule.setup('/doc', app, swaggerDocument);
 
-  await app.listen(config.PORT || 4000);
+  await app.listen(config.PORT || 4000, '0.0.0.0');
 }
 bootstrap();
