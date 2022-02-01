@@ -5,6 +5,9 @@ export const apiPropertyExample = {
   login: 'myLogin',
   name: 'Foo',
   password: 'qwerty',
+  title: 'Title',
+  order: 1,
+  description: 'description',
   token:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzNDI1MWQwMC0yMTUyLTQxNWQtOTRjOS02ZTJlOWQ1M2Y4M2YiLCJsb2dpbiI6ImFkbWluIiwiaWF0IjoxNjQzNzI2MjE4fQ.S8cBFZrGvsP5WDn3Fc_dcxgnCM9qwEoLhCVwygeTV8k',
 } as const;

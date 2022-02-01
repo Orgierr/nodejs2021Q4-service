@@ -1,49 +1,63 @@
 import {
-  BadRequestException,
   Controller,
   Get,
   Param,
   Post,
-  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { createReadStream } from 'fs';
+
 import { diskStorage } from 'multer';
-import { join } from 'path';
-import { Response } from 'express';
 import { AuthGuard } from 'src/guard/auth.guard';
 import AppAnyFilesInterceptor from 'src/interceptors/any-files.interceptor';
-import { ApiConsumes } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiTags,
+  ApiOkResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiHeader,
+  ApiProduces,
+} from '@nestjs/swagger';
+import { FilesUploadDto } from './dto/upload-files.dto';
+import { FileService } from './file.service';
+import { config } from 'src/common/config';
+import { ExceptionExample } from 'src/common/constants';
 
-@UseGuards(AuthGuard)
+@ApiBearerAuth()
+@ApiTags('File')
+// @UseGuards(AuthGuard)
 @Controller('file')
 export class FileController {
+  constructor(private readonly fileService: FileService) {}
+
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: FilesUploadDto,
+  })
   @Post()
   @UseInterceptors(
     AppAnyFilesInterceptor({
       storage: diskStorage({
-        destination: './static',
+        destination: config.MULTER_DEST,
         filename: (_, file, cb) => {
           return cb(null, file.originalname);
         },
       }),
     }),
   )
-  @ApiConsumes('multipart/form-data')
   uploadFile() {
     return;
   }
 
+  @ApiProduces('application/octet-stream', 'application/json')
+  @ApiOkResponse({ schema: { type: 'string', format: 'binary' } })
+  @ApiNotFoundResponse({ type: ExceptionExample })
   @Get(':fileName')
-  getFile(@Param('fileName') fileName: string, @Res() res: Response) {
-    try {
-      const file = createReadStream(
-        join(process.cwd(), `/static/${fileName}`),
-      ).on('error', () => null);
-      file.pipe(res).on('error', () => null);
-    } catch (error) {
-      throw new BadRequestException();
-    }
+  async getFile(@Param('fileName') fileName: string) {
+    return await this.fileService.getFile(fileName);
   }
 }
