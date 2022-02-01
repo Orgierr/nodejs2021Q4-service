@@ -1,13 +1,3 @@
-import { IsString } from 'class-validator';
-import { User } from '../entities/user.entity';
+import { CreateUserDto } from './create-user.dto';
 
-export class UpdateUserDto extends User {
-  @IsString()
-  login: string;
-
-  @IsString()
-  password: string;
-
-  @IsString()
-  name: string;
-}
+export class UpdateUserDto extends CreateUserDto {}

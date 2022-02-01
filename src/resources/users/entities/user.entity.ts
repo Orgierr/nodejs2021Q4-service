@@ -7,7 +7,6 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
-import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Entity({ name: 'users' })
 export class User {
@@ -35,7 +34,7 @@ export class User {
    * @param  user - user to destruct
    * @returns id (string), name (string), login (string)
    */
-  static toResponse(user: User | UpdateUserDto) {
+  static toResponse(user: User) {
     const { id, name, login } = user;
     return { id, name, login };
   }

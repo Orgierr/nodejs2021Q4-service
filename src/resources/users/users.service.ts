@@ -53,20 +53,24 @@ export class UsersService {
   }
   /**
    * Update user
-   * @param  updatedUser - new user data (User)
+   * @param  updatedUser - new user data (UpdateUserDto)
+   * @param  id - user id (string)
    * @returns  user to response Promise(User.toResponse|undefined)
    */
-  async update(updatedUser: UpdateUserDto) {
+  async update(updatedUser: UpdateUserDto, id: string) {
     updatedUser.password = await this.crypt.getPasswordHash(
       updatedUser.password,
     );
 
-    const result = await this.usersRepository.update(
-      updatedUser.id,
-      updatedUser,
-    );
+    const result = await this.usersRepository
+      .createQueryBuilder()
+      .update(User)
+      .set(updatedUser)
+      .where({ id: id })
+      .returning('*')
+      .execute();
     if (result.affected) {
-      return User.toResponse(updatedUser);
+      return User.toResponse(result.raw[0]);
     }
     return undefined;
   }

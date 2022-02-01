@@ -14,6 +14,7 @@ import { join } from 'path';
 import { Response } from 'express';
 import { AuthGuard } from 'src/guard/auth.guard';
 import AppAnyFilesInterceptor from 'src/interceptors/any-files.interceptor';
+import { ApiConsumes } from '@nestjs/swagger';
 
 @UseGuards(AuthGuard)
 @Controller('file')
@@ -29,6 +30,7 @@ export class FileController {
       }),
     }),
   )
+  @ApiConsumes('multipart/form-data')
   uploadFile() {
     return;
   }
