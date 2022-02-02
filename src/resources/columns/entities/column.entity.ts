@@ -1,18 +1,17 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { apiPropertyExample } from 'src/common/constants';
-import { Column } from 'src/resources/columns/entities/column.entity';
+import { Board } from 'src/resources/boards/entities/board.entity';
 import { Task } from 'src/resources/tasks/entities/task.entity';
-import { User } from 'src/resources/users/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column as TableColumn,
+  ManyToOne,
   OneToMany,
-  JoinTable,
 } from 'typeorm';
 
-@Entity({ name: 'boards' })
-export class Board {
+@Entity({ name: 'columns' })
+export class Column {
   @ApiProperty({ example: apiPropertyExample.id })
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -21,19 +20,15 @@ export class Board {
   @TableColumn()
   title: string;
 
-  @ApiProperty()
-  @OneToMany(() => Column, (column) => column.board, {
-    cascade: true,
-    nullable: true,
-  })
-  @JoinTable()
-  columns: Column[];
+  @ApiProperty({ example: apiPropertyExample.order })
+  @TableColumn()
+  order: number;
 
   @ApiHideProperty()
-  @OneToMany(() => User, (user) => user.board)
-  user: User;
+  @ManyToOne(() => Board, (board) => board.user, { onDelete: 'CASCADE' })
+  board: Board;
 
   @ApiHideProperty()
-  @OneToMany(() => Task, (task) => task.board)
+  @OneToMany(() => Task, (task) => task.column)
   task: Task;
 }

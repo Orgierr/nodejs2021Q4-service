@@ -12,6 +12,14 @@ export class LoginService {
     private crypt: Crypt,
     private jwtService: JwtService,
   ) {}
+
+  /**
+   * Find user by login and password and return jwt
+   * token
+   * @param  login - user login(string)
+   * @param  password  - user password (string)
+   * @returns  jwt token
+   */
   async login(login: string, password: string) {
     const user = await this.usersRepository.findOne({
       where: {

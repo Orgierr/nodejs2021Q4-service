@@ -7,6 +7,7 @@ import { LoginModule } from './resources/login/login.module';
 import { UnhandledError } from './unhandledError/unhandled_error';
 import { FileModule } from './resources/file/file.module';
 import { JwtAppModule } from './jwt-app/jwt-app.module';
+import { ColumnsModule } from './resources/columns/columns.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { JwtAppModule } from './jwt-app/jwt-app.module';
     LoginModule,
     FileModule,
     JwtAppModule,
+    ColumnsModule,
   ],
   controllers: [],
   providers: [Logger, UnhandledError],

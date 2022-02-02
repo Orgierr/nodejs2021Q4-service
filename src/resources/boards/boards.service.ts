@@ -12,7 +12,7 @@ export class BoardsService {
     private boardRepository: Repository<Board>,
   ) {}
   /**
-   * Add new user in db
+   * Add new board in db
    * @param board - board instance (Board)
    * @returns created board (Board)
    */
@@ -24,7 +24,11 @@ export class BoardsService {
    * @returns all boards (Board[])
    */
   findAll() {
-    return this.boardRepository.find();
+    return this.boardRepository
+      .createQueryBuilder('boards')
+      .leftJoinAndSelect('boards.columns', 'column')
+      .orderBy('column.order', 'ASC')
+      .getMany();
   }
   /**
    * Get board by id
@@ -32,7 +36,12 @@ export class BoardsService {
    * @returns  board by id  Promise(Board | undefined)
    */
   getBoardById(id: string) {
-    return this.boardRepository.findOne({ id: id });
+    return this.boardRepository
+      .createQueryBuilder('boards')
+      .leftJoinAndSelect('boards.columns', 'column')
+      .where({ id: id })
+      .orderBy('column.order', 'ASC')
+      .getOne();
   }
   /**
    * Update board

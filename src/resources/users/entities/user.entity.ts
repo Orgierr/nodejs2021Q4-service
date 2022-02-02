@@ -29,7 +29,7 @@ export class User {
   board: Board;
 
   /**
-   * Get from user id,name,login string
+   * Get id,name,login from user
    *
    * @param  user - user to destruct
    * @returns id (string), name (string), login (string)

@@ -13,11 +13,11 @@ export class TasksService {
   ) {}
   /**
    * Add new task in db
-   * @param  task - new task
+   * @param  createTaskDto - new task
    * @returns created task  Promise(Task)
    */
-  createTasks(task: CreateTaskDto) {
-    return this.tasksRepository.save(task);
+  createTasks(createTaskDto: CreateTaskDto) {
+    return this.tasksRepository.save(createTaskDto);
   }
   /**
    * Get all tasks by board id

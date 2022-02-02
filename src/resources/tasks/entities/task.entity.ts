@@ -1,6 +1,7 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { apiPropertyExample } from 'src/common/constants';
 import { Board } from 'src/resources/boards/entities/board.entity';
+import { Column } from 'src/resources/columns/entities/column.entity';
 import { User } from 'src/resources/users/entities/user.entity';
 import {
   Entity,
@@ -8,7 +9,6 @@ import {
   Column as TableColumn,
   ManyToOne,
 } from 'typeorm';
-import { UpdateTaskDto } from '../dto/update-task.dto';
 
 @Entity({ name: 'tasks' })
 export class Task {
@@ -45,16 +45,20 @@ export class Task {
   user: User;
 
   @ApiHideProperty()
+  @ManyToOne(() => Column, (column) => column.task)
+  column: Column;
+
+  @ApiHideProperty()
   @ManyToOne(() => Board, (board) => board.task, { onDelete: 'CASCADE' })
   board: Board;
 
   /**
-   * Get from user id, title, order, description,userId
+   * Get id, title, order, description,userId from task
    *
    * @param  task - task to destruct
    * @returns id string, title string, order number|null, description string, userId string
    */
-  static toResponse(task: Task | UpdateTaskDto) {
+  static toResponse(task: Task) {
     const { id, title, order, description, userId } = task;
     return { id, title, order, description, userId };
   }

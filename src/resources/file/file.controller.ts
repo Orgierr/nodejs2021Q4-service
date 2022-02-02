@@ -17,9 +17,6 @@ import {
   ApiTags,
   ApiOkResponse,
   ApiNotFoundResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiHeader,
   ApiProduces,
 } from '@nestjs/swagger';
 import { FilesUploadDto } from './dto/upload-files.dto';
@@ -29,7 +26,7 @@ import { ExceptionExample } from 'src/common/constants';
 
 @ApiBearerAuth()
 @ApiTags('File')
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('file')
 export class FileController {
   constructor(private readonly fileService: FileService) {}

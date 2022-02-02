@@ -25,7 +25,6 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Task } from '../tasks/entities/task.entity';
 import { Board } from './entities/board.entity';
 import { ExceptionExample } from 'src/common/constants';
 
