@@ -7,7 +7,16 @@ services:
     networks:
       - skynet
     container_name: postgres
-    command: postgres -c logging_collector=on
+    command:
+      [
+        'postgres',
+        '-c',
+        'logging_collector=on',
+        '-c',
+        'log_directory=/logs',
+        '-c',
+        'log_statement=all',
+      ]
     env_file: ./.env
     environment:
       PGPORT: ${POSTGRES_PORT}
@@ -15,7 +24,7 @@ services:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
       - pg_data:${PGDATA}
-      - postgres_logs:/var/log/postgresql
+      - postgres_logs:/logs
   node:
     restart: always
     image: docker.io/orgierr/app:latest

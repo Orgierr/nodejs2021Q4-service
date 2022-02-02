@@ -1,17 +1,18 @@
 {
   "version": "0.2.0",
   "configurations": [
-    {
-      "name": "Launch ts debug",
-      "type": "node",
-      "request": "launch",
-      "runtimeArgs": [
-          "-r",
-          "ts-node/register"
-      ],
-      "args": [
-          "${workspaceFolder}/src/server.ts"
-      ]
-    }
+      {
+          "type": "node",
+          "request": "launch",
+          "name": "Debug Project",
+          "program": "${workspaceFolder}/src/main.ts",
+          "preLaunchTask": "npm: build",
+          "sourceMaps": true,
+          "smartStep": true,
+          "internalConsoleOptions": "openOnSessionStart",
+          "outFiles": [
+              "${workspaceFolder}/dist/**/*.js"
+          ]
+      }
   ]
 }

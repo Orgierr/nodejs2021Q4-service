@@ -12,9 +12,7 @@ import {
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { AllInterceptorInterceptor } from './interceptors/all-interceptor.interceptor';
 import { contentParser } from 'fastify-file-interceptor';
-import YAML from 'yamljs';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import path from 'path';
 async function bootstrap() {
   const HttpAdapter = config.USE_FASTIFY ? FastifyAdapter : ExpressAdapter;
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -31,8 +29,8 @@ async function bootstrap() {
   }
 
   const configSwagger = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('API description')
+    .setTitle('Trello Service')
+    .setDescription("Let's try to create a competitor for Trello!")
     .setVersion('3.0')
     .addBearerAuth({ type: 'http', name: 'JWT' })
     .build();
