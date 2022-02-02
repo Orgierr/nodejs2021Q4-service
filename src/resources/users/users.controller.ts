@@ -18,6 +18,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBearerAuth,
+  ApiConflictResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -44,6 +45,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Create new user' })
   @ApiCreatedResponse({ type: SelectUserDto })
+  @ApiConflictResponse({ type: ExceptionExample })
   @Post()
   @HttpCode(StatusCodes.CREATED)
   async create(@Body() user: CreateUserDto) {
@@ -65,6 +67,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Update user by id' })
   @ApiOkResponse({ type: SelectUserDto })
   @ApiNotFoundResponse({ type: ExceptionExample })
+  @ApiConflictResponse({ type: ExceptionExample })
   @Put(':id')
   async update(@Param('id') id: string, @Body() updatedUser: UpdateUserDto) {
     const user = await this.usersService.update(updatedUser, id);

@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Crypt } from 'src/crypt/crypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { exeptionMessage } from 'src/common/constants';
+import { exceptionMessage } from 'src/common/constants';
 
 const returnedColumn: (keyof User)[] = ['id', 'login', 'name'];
 
@@ -38,7 +38,7 @@ export class UsersService {
       user.password = await this.crypt.getPasswordHash(user.password);
       return User.toResponse(await this.usersRepository.save(user));
     }
-    throw new ConflictException(exeptionMessage.loginUsed);
+    throw new ConflictException(exceptionMessage.loginUsed);
   }
   /**
    * Get all users
@@ -85,7 +85,7 @@ export class UsersService {
       }
       return undefined;
     }
-    throw new ConflictException(exeptionMessage.loginUsed);
+    throw new ConflictException(exceptionMessage.loginUsed);
   }
   /**
    * Delete user by id

@@ -12,18 +12,18 @@ export const apiPropertyExample = {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzNDI1MWQwMC0yMTUyLTQxNWQtOTRjOS02ZTJlOWQ1M2Y4M2YiLCJsb2dpbiI6ImFkbWluIiwiaWF0IjoxNjQzNzI2MjE4fQ.S8cBFZrGvsP5WDn3Fc_dcxgnCM9qwEoLhCVwygeTV8k',
 } as const;
 
-export const exeptionMessage = {
+export const exceptionMessage = {
   loginUsed: 'Login is already in use',
 };
 
 export class ExceptionExample {
-  @ApiProperty()
+  @ApiProperty({ example: 409 })
   statusCode: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: exceptionMessage.loginUsed })
   message: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Conflict' })
   error: string;
 }
 
