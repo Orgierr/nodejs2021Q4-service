@@ -97,52 +97,86 @@ For more information, visit: https://code.visualstudio.com/docs/editor/debugging
 
 # Express
 
-```
-vusers.created_by_name.0: ...................................................... 6000
-vusers.created.total: .......................................................... 6000
-vusers.completed: .............................................................. 6000
-vusers.session_length:
-min: ......................................................................... 260.7
-max: ......................................................................... 1523
-median: ...................................................................... 441.5
-p95: ......................................................................... 608
-p99: ......................................................................... 804.5
-http.request_rate: ............................................................. 60/sec
-http.requests: ................................................................. 36000
-http.codes.201: ................................................................ 12000
-http.responses: ................................................................ 36000
-http.codes.200: ................................................................ 18000
-http.codes.204: ................................................................ 6000
-http.response_time:
-min: ......................................................................... 0
-max: ......................................................................... 882
-median: ...................................................................... 74.4
-p95: ......................................................................... 190.6
-p99: ......................................................................... 247.2
-```
+| vusers.created_by_name.0     | 6000   |
+| ---------------------------- | ------ |
+| vusers.created.total         | 6000   |
+| vusers.completed             | 6000   |
+| vusers.session_length-min    | 257.7  |
+| vusers.session_length-max    | 934.1  |
+| vusers.session_length-median | 415.8  |
+| vusers.session_length-p95    | 528.6  |
+| vusers.session_length-p99    | 572.6  |
+| http.request_rate            | 60/sec |
+| http.requests                | 35401  |
+| http.codes.201               | 11800  |
+| http.responses               | 35400  |
+| http.codes.200               | 17700  |
+| http.codes.204               | 5900   |
+| http.response_time-min       | 0      |
+| http.response_time-max       | 412    |
+| http.response_time-median    | 68.7   |
+| http.response_time-p95       | 172.5  |
+| http.response_time-p99       | 206.5  |
 
 # Fastify
 
+| vusers.created_by_name.0     | 5900   |
+| ---------------------------- | ------ |
+| vusers.created.total         | 5900   |
+| vusers.completed             | 5900   |
+| vusers.session_length-min    | 257.7  |
+| vusers.session_length-max    | 934.1  |
+| vusers.session_length-median | 415.8  |
+| vusers.session_length-p95    | 528.6  |
+| vusers.session_length-p99    | 572.6  |
+| http.request_rate            | 60/sec |
+| http.requests                | 35401  |
+| http.codes.201               | 11800  |
+| http.responses               | 35400  |
+| http.codes.200               | 17700  |
+| http.codes.204               | 5900   |
+| http.response_time-min       | 0      |
+| http.response_time-max       | 412    |
+| http.response_time-median    | 68.7   |
+| http.response_time-p95       | 172.5  |
+| http.response_time-p99       | 206.5  |
+
+# App endpoints
+
+Access to all routes except /login, /doc requires authentication
+
 ```
-vusers.created_by_name.0: ...................................................... 5900
-vusers.created.total: .......................................................... 5900
-vusers.completed: .............................................................. 5900
-vusers.session_length:
-min: ......................................................................... 257.7
-max: ......................................................................... 934.1
-median: ...................................................................... 415.8
-p95: ......................................................................... 528.6
-p99: ......................................................................... 572.6
-http.request_rate: ............................................................. 60/sec
-http.requests: ................................................................. 35401
-http.codes.201: ................................................................ 11800
-http.responses: ................................................................ 35400
-http.codes.200: ................................................................ 17700
-http.codes.204: ................................................................ 5900
-http.response_time:
-min: ......................................................................... 0
-max: ......................................................................... 412
-median: ...................................................................... 68.7
-p95: ......................................................................... 172.5
-p99: ......................................................................... 206.5
+Authorization: Bearer <token>
 ```
+
+1. `User` (`/users` route)
+   - `GET /users` - get all users (remove password from response)
+   - `GET /users/:userId` - get the user by id (ex. “/users/123”) (remove password from response)
+   - `POST /users` - create user
+   - `PUT /users/:userId` - update user
+   - `DELETE /users/:userId` - delete user
+2. `Board` (`/boards` route)
+   - `GET /boards` - get all boards
+   - `GET /boards/:boardId` - get the board by id
+   - `POST /boards` - create board
+   - `PUT /boards/:boardId` - update board
+   - `DELETE /boards/:boardId` - delete board
+3. `Task` (`/boards/:boardId/tasks` route)
+   - `GET /boards/:boardId/tasks` - get all tasks
+   - `GET /boards/:boardId/tasks/:taskId` - get the task by id
+   - `POST /boards/:boardId/tasks` - create task
+   - `PUT /boards/:boardId/tasks/:taskId` - update task
+   - `DELETE /boards/:boardId/tasks/:taskId` - delete task
+4. `Column` (`/boards/:boardId/columns` route)
+   - `GET /boards/:boardId/columns` - get all columns
+   - `GET /boards/:boardId/columns/:columnId` - get the column by id
+   - `POST /boards/:boardId/columns` - create column
+   - `PUT /boards/:boardId/columns/:columnId` - update column
+   - `DELETE /boards/:boardId/columns/:columnId` - delete column
+5. `File` (`/file` route)
+   - `GET /file/:fileName` - get file by name
+   - `POST /file` - upload file
+6. `Login` (`/login` route)
+   - `POST /login` - login to app by login and password,receive JWT token
+7. `Login` (`/doc` route)
+   - `GET /doc` - swagger ui
