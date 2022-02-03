@@ -25,6 +25,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { Board } from './entities/board.entity';
@@ -55,6 +56,10 @@ export class BoardsController {
   @ApiOperation({ summary: 'Get board by id' })
   @ApiOkResponse({ type: Board })
   @ApiNotFoundResponse({ type: ExceptionExample })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+  })
   @Get(':id')
   async getBoardById(
     @Param(
@@ -76,6 +81,10 @@ export class BoardsController {
   @ApiOperation({ summary: 'Update board by id' })
   @ApiOkResponse({ type: Board })
   @ApiNotFoundResponse({ type: ExceptionExample })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+  })
   @Put(':id')
   async updateBoard(
     @Param(
@@ -98,6 +107,10 @@ export class BoardsController {
   @ApiOperation({ summary: 'Delete board by taskId' })
   @ApiNoContentResponse()
   @ApiNotFoundResponse({ type: ExceptionExample })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+  })
   @Delete(':id')
   @HttpCode(StatusCodes.NO_CONTENT)
   async deleteBoardById(

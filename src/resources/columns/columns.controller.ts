@@ -20,6 +20,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiNoContentResponse,
+  ApiParam,
 } from '@nestjs/swagger';
 import { StatusCodes } from 'http-status-codes';
 import { ExceptionExample, exceptionMessage } from 'src/common/constants';
@@ -57,6 +58,10 @@ export class ColumnsController {
   @ApiOperation({ summary: 'Get all columns by boardId' })
   @ApiOkResponse({ type: [Column] })
   @ApiNotFoundResponse({ type: ExceptionExample })
+  @ApiParam({
+    name: 'boardId',
+    format: 'uuid',
+  })
   @Get()
   async getAllColumnsByBoardId(
     @Param(
@@ -74,6 +79,14 @@ export class ColumnsController {
   @ApiOperation({ summary: 'Get  column by boardId and columnId' })
   @ApiOkResponse({ type: Column })
   @ApiNotFoundResponse({ type: ExceptionExample })
+  @ApiParam({
+    name: 'boardId',
+    format: 'uuid',
+  })
+  @ApiParam({
+    name: 'columnId',
+    format: 'uuid',
+  })
   @Get(':columnId')
   async getColumnByBoardIdAndColumnId(
     @Param(
@@ -106,6 +119,14 @@ export class ColumnsController {
   @ApiOperation({ summary: 'Update column by  columnId' })
   @ApiOkResponse({ type: Column })
   @ApiNotFoundResponse({ type: ExceptionExample })
+  @ApiParam({
+    name: 'boardId',
+    format: 'uuid',
+  })
+  @ApiParam({
+    name: 'columnId',
+    format: 'uuid',
+  })
   @Put(':columnId')
   async updateColumn(
     @Param(
@@ -131,6 +152,14 @@ export class ColumnsController {
   @ApiOperation({ summary: 'Delete column by columnId' })
   @ApiNoContentResponse()
   @ApiNotFoundResponse({ type: ExceptionExample })
+  @ApiParam({
+    name: 'boardId',
+    format: 'uuid',
+  })
+  @ApiParam({
+    name: 'columnId',
+    format: 'uuid',
+  })
   @Delete(':columnId')
   @HttpCode(StatusCodes.NO_CONTENT)
   async deleteColumn(

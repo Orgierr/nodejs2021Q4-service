@@ -26,6 +26,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { SelectUserDto } from './dto/select-user.dto';
@@ -57,6 +58,10 @@ export class UsersController {
   @ApiOperation({ summary: 'Get user by id' })
   @ApiOkResponse({ type: SelectUserDto })
   @ApiNotFoundResponse({ type: ExceptionExample })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+  })
   @Get(':id')
   async findOne(
     @Param(
@@ -79,6 +84,10 @@ export class UsersController {
   @ApiOkResponse({ type: SelectUserDto })
   @ApiNotFoundResponse({ type: ExceptionExample })
   @ApiConflictResponse({ type: ExceptionExample })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+  })
   @Put(':id')
   async update(
     @Param(
@@ -101,6 +110,10 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete user by id' })
   @ApiNoContentResponse()
   @ApiNotFoundResponse({ type: ExceptionExample })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+  })
   @Delete(':id')
   @HttpCode(StatusCodes.NO_CONTENT)
   async remove(
