@@ -15,10 +15,17 @@ export class ColumnsService {
   /**
    * Add new column in db
    * @param  createColumnDto - new column
+   * @param  boardId - board Id
    * @returns created column  Promise(Column)
    */
-  createColumn(createColumnDto: CreateColumnDto): Promise<Column> {
-    return this.columnRepository.save(createColumnDto);
+  async createColumn(
+    createColumnDto: CreateColumnDto,
+    boardId: string,
+  ): Promise<Column> {
+    return await this.columnRepository.save({
+      ...createColumnDto,
+      boardId: boardId,
+    });
   }
 
   /**
@@ -26,8 +33,8 @@ export class ColumnsService {
    * @param boardId - board id (string)
    * @returns  all columns Promise(Column[])
    */
-  getAllColumnsByBoardId(boardId: string): Promise<Column[]> {
-    return this.columnRepository.find({ where: { boardId: boardId } });
+  async getAllColumnsByBoardId(boardId: string): Promise<Column[]> {
+    return await this.columnRepository.find({ where: { boardId: boardId } });
   }
 
   /**
@@ -36,11 +43,11 @@ export class ColumnsService {
    * @param  columnId - column id (string)
    * @returns column Promise(Column | undefined)
    */
-  getColumnByBoardIdAndColumnId(
+  async getColumnByBoardIdAndColumnId(
     boardId: string,
     columnId: string,
   ): Promise<Column | undefined> {
-    return this.columnRepository.findOne({
+    return await this.columnRepository.findOne({
       where: { id: columnId, boardId: boardId },
     });
   }
@@ -74,7 +81,7 @@ export class ColumnsService {
    * @param  columnId  - column id (string)
    * @returns  deleted result Promise(DeleteResult)
    */
-  deleteColumn(columnId: string): Promise<DeleteResult> {
-    return this.columnRepository.delete({ id: columnId });
+  async deleteColumn(columnId: string): Promise<DeleteResult> {
+    return await this.columnRepository.delete({ id: columnId });
   }
 }

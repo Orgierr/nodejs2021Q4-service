@@ -9,6 +9,8 @@ import {
   NotFoundException,
   Put,
   UseGuards,
+  ParseUUIDPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { StatusCodes } from 'http-status-codes';
@@ -25,7 +27,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Task } from './entities/task.entity';
-import { ExceptionExample } from 'src/common/constants';
+import { ExceptionExample, exceptionMessage } from 'src/common/constants';
 
 @ApiBearerAuth()
 @ApiTags('Tasks')
@@ -39,7 +41,14 @@ export class TasksController {
   @Post()
   @HttpCode(StatusCodes.CREATED)
   async createTasks(
-    @Param('boardId') boardId: string,
+    @Param(
+      'boardId',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidBoardId),
+      }),
+    )
+    boardId: string,
     @Body() task: CreateTaskDto,
   ) {
     return await this.tasksService.createTasks(task, boardId);
@@ -49,7 +58,16 @@ export class TasksController {
   @ApiOkResponse({ type: [Task] })
   @ApiNotFoundResponse({ type: ExceptionExample })
   @Get()
-  async getAllTaskByBoardId(@Param('boardId') boardId: string) {
+  async getAllTaskByBoardId(
+    @Param(
+      'boardId',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidBoardId),
+      }),
+    )
+    boardId: string,
+  ) {
     return await this.tasksService.getAllTaskByBoardId(boardId);
   }
 
@@ -58,8 +76,22 @@ export class TasksController {
   @ApiNotFoundResponse({ type: ExceptionExample })
   @Get(':taskId')
   async getTaskByBoardIdAndTaskId(
-    @Param('boardId') boardId: string,
-    @Param('taskId') taskId: string,
+    @Param(
+      'boardId',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidBoardId),
+      }),
+    )
+    boardId: string,
+    @Param(
+      'taskId',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidTaskId),
+      }),
+    )
+    taskId: string,
   ) {
     const task = await this.tasksService.getTaskByBoardIdAndTaskId(
       boardId,
@@ -76,8 +108,22 @@ export class TasksController {
   @ApiNotFoundResponse({ type: ExceptionExample })
   @Put(':taskId')
   async updateTask(
-    @Param('boardId') boardId: string,
-    @Param('taskId') taskId: string,
+    @Param(
+      'boardId',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidBoardId),
+      }),
+    )
+    boardId: string,
+    @Param(
+      'taskId',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidTaskId),
+      }),
+    )
+    taskId: string,
     @Body() updatedTask: UpdateTaskDto,
   ) {
     const task = await this.tasksService.updateTask(
@@ -97,8 +143,22 @@ export class TasksController {
   @Delete(':taskId')
   @HttpCode(StatusCodes.NO_CONTENT)
   async deleteTask(
-    @Param('boardId') boardId: string,
-    @Param('taskId') taskId: string,
+    @Param(
+      'boardId',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidBoardId),
+      }),
+    )
+    boardId: string,
+    @Param(
+      'taskId',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidTaskId),
+      }),
+    )
+    taskId: string,
   ) {
     const result = await this.tasksService.deleteTask(boardId, taskId);
     if (!result.affected) {

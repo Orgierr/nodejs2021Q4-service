@@ -14,12 +14,9 @@ import { AllInterceptorInterceptor } from './interceptors/all-interceptor.interc
 import { contentParser } from 'fastify-file-interceptor';
 import { SwaggerModule } from '@nestjs/swagger';
 import { swaggerConfig } from './common/swagger_config';
-import { ConfigService } from '@nestjs/config';
-import { ConfigProperty } from './enums/config_property';
+
 async function bootstrap() {
-  const configService = new ConfigService();
-  const USE_FASTIFY = configService.get<boolean>(ConfigProperty.USE_FASTIFY);
-  const HttpAdapter = USE_FASTIFY ? FastifyAdapter : ExpressAdapter;
+  const HttpAdapter = config.USE_FASTIFY ? FastifyAdapter : ExpressAdapter;
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new HttpAdapter(),
@@ -29,7 +26,7 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter, Logger));
   app.useGlobalInterceptors(new AllInterceptorInterceptor(Logger));
   app.useGlobalPipes(new ValidationPipe());
-  if (USE_FASTIFY) {
+  if (config.USE_FASTIFY) {
     app.register(contentParser);
   }
 

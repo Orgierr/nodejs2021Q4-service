@@ -9,6 +9,8 @@ import {
   HttpCode,
   NotFoundException,
   UseGuards,
+  ParseUUIDPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 import { UsersService } from './users.service';
@@ -27,7 +29,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { SelectUserDto } from './dto/select-user.dto';
-import { ExceptionExample } from 'src/common/constants';
+import { ExceptionExample, exceptionMessage } from 'src/common/constants';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -56,7 +58,16 @@ export class UsersController {
   @ApiOkResponse({ type: SelectUserDto })
   @ApiNotFoundResponse({ type: ExceptionExample })
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidUserId),
+      }),
+    )
+    id: string,
+  ) {
     const user: User | undefined = await this.usersService.findOne(id);
     if (user) {
       return user;
@@ -69,7 +80,17 @@ export class UsersController {
   @ApiNotFoundResponse({ type: ExceptionExample })
   @ApiConflictResponse({ type: ExceptionExample })
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updatedUser: UpdateUserDto) {
+  async update(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidUserId),
+      }),
+    )
+    id: string,
+    @Body() updatedUser: UpdateUserDto,
+  ) {
     const user = await this.usersService.update(updatedUser, id);
     if (user) {
       return user;
@@ -82,7 +103,16 @@ export class UsersController {
   @ApiNotFoundResponse({ type: ExceptionExample })
   @Delete(':id')
   @HttpCode(StatusCodes.NO_CONTENT)
-  async remove(@Param('id') id: string) {
+  async remove(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidUserId),
+      }),
+    )
+    id: string,
+  ) {
     const result = await this.usersService.remove(id);
     if (!result.affected) {
       throw new NotFoundException();

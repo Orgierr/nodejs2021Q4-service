@@ -9,6 +9,8 @@ import {
   NotFoundException,
   Put,
   UseGuards,
+  BadRequestException,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { StatusCodes } from 'http-status-codes';
@@ -26,7 +28,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Board } from './entities/board.entity';
-import { ExceptionExample } from 'src/common/constants';
+import { ExceptionExample, exceptionMessage } from 'src/common/constants';
 
 @ApiBearerAuth()
 @ApiTags('Boards')
@@ -54,7 +56,16 @@ export class BoardsController {
   @ApiOkResponse({ type: Board })
   @ApiNotFoundResponse({ type: ExceptionExample })
   @Get(':id')
-  async getBoardById(@Param('id') id: string) {
+  async getBoardById(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidBoardId),
+      }),
+    )
+    id: string,
+  ) {
     const board = await this.boardsService.getBoardById(id);
     if (!board) {
       throw new NotFoundException();
@@ -67,7 +78,14 @@ export class BoardsController {
   @ApiNotFoundResponse({ type: ExceptionExample })
   @Put(':id')
   async updateBoard(
-    @Param('id') id: string,
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidBoardId),
+      }),
+    )
+    id: string,
     @Body() updatedBoard: UpdateBoardDto,
   ) {
     const board = await this.boardsService.updateBoard(updatedBoard, id);
@@ -82,7 +100,16 @@ export class BoardsController {
   @ApiNotFoundResponse({ type: ExceptionExample })
   @Delete(':id')
   @HttpCode(StatusCodes.NO_CONTENT)
-  async deleteBoardById(@Param('id') id: string) {
+  async deleteBoardById(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        exceptionFactory: () =>
+          new BadRequestException(exceptionMessage.noValidBoardId),
+      }),
+    )
+    id: string,
+  ) {
     const result = await this.boardsService.deleteBoardById(id);
     if (!result.affected) {
       throw new NotFoundException();

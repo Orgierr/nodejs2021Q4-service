@@ -14,6 +14,10 @@ export const apiPropertyExample = {
 
 export const exceptionMessage = {
   loginUsed: 'Login is already in use',
+  noValidUserId: 'Validation failed (user id must be uuid is expected)',
+  noValidBoardId: 'Validation failed (board id must be uuid is expected)',
+  noValidTaskId: 'Validation failed (task id must be uuid is expected)',
+  noValidColumnId: 'Validation failed (column id must be uuid is expected)',
 };
 
 export class ExceptionExample {
