@@ -8,7 +8,6 @@ dotenv.config({
 export const config = {
   PORT: Number(process.env['PORT']),
   NODE_ENV: process.env['NODE_ENV'],
-  MONGO_CONNECTION_STRING: process.env['MONGO_CONNECTION_STRING'],
   JWT_SECRET_KEY: process.env['JWT_SECRET_KEY'],
   AUTH_MODE: process.env['AUTH_MODE'] === 'true',
   LOG_LEVEL: process.env['LOG_LEVEL'],
@@ -19,4 +18,5 @@ export const config = {
   POSTGRES_DB: process.env['POSTGRES_DB'],
   USE_FASTIFY: process.env['USE_FASTIFY'] === 'true',
   MULTER_DEST: process.env['MULTER_DEST'],
+  ADDRESS: String(process.env['ADDRESS']),
 };

@@ -1,5 +1,6 @@
-import { Inject, Logger, LoggerService } from '@nestjs/common';
+import { Inject, Injectable, Logger, LoggerService } from '@nestjs/common';
 
+@Injectable()
 export class UnhandledError {
   constructor(
     @Inject(Logger)

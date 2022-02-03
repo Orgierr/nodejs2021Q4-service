@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { Crypt } from 'src/crypt/crypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -27,12 +27,17 @@ export class UsersService {
       }
     })();
   }
+
   /**
    * Add new user in db
    * @param user - new user (User)
    * @returns user to response Promise(User.toResponse)
    */
-  async create(user: CreateUserDto) {
+  async create(user: CreateUserDto): Promise<{
+    id: string;
+    name: string;
+    login: string;
+  }> {
     const userExist = await this.usersRepository.findOne({ login: user.login });
     if (!userExist) {
       user.password = await this.crypt.getPasswordHash(user.password);
@@ -40,31 +45,44 @@ export class UsersService {
     }
     throw new ConflictException(exceptionMessage.loginUsed);
   }
+
   /**
    * Get all users
    *@returns all users Promise(Users[])
    */
-  findAll() {
+  findAll(): Promise<User[]> {
     return this.usersRepository.find({ select: returnedColumn });
   }
+
   /**
    * Get user by id
    * @param  id - user id (string)
    * @returns user by id  Promise(User | undefined)
    */
-  findOne(id: string) {
+  findOne(id: string): Promise<User | undefined> {
     return this.usersRepository.findOne({
       select: returnedColumn,
       where: { id: id },
     });
   }
+
   /**
    * Update user
    * @param  updatedUser - new user data (UpdateUserDto)
    * @param  id - user id (string)
    * @returns  user to response Promise(User.toResponse|undefined)
    */
-  async update(updatedUser: UpdateUserDto, id: string) {
+  async update(
+    updatedUser: UpdateUserDto,
+    id: string,
+  ): Promise<
+    | {
+        id: string;
+        name: string;
+        login: string;
+      }
+    | undefined
+  > {
     const userExist = await this.usersRepository.findOne({
       login: updatedUser.login,
     });
@@ -87,12 +105,13 @@ export class UsersService {
     }
     throw new ConflictException(exceptionMessage.loginUsed);
   }
+
   /**
    * Delete user by id
    * @param id - user id (string)
    * @returns  deleted result Promise(DeleteResult)
    */
-  remove(id: string) {
+  remove(id: string): Promise<DeleteResult> {
     return this.usersRepository.delete({ id: id });
   }
 }

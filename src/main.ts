@@ -12,9 +12,14 @@ import {
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { AllInterceptorInterceptor } from './interceptors/all-interceptor.interceptor';
 import { contentParser } from 'fastify-file-interceptor';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
+import { swaggerConfig } from './common/swagger_config';
+import { ConfigService } from '@nestjs/config';
+import { ConfigProperty } from './enums/config_property';
 async function bootstrap() {
-  const HttpAdapter = config.USE_FASTIFY ? FastifyAdapter : ExpressAdapter;
+  const configService = new ConfigService();
+  const USE_FASTIFY = configService.get<boolean>(ConfigProperty.USE_FASTIFY);
+  const HttpAdapter = USE_FASTIFY ? FastifyAdapter : ExpressAdapter;
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new HttpAdapter(),
@@ -24,19 +29,13 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter, Logger));
   app.useGlobalInterceptors(new AllInterceptorInterceptor(Logger));
   app.useGlobalPipes(new ValidationPipe());
-  if (config.USE_FASTIFY) {
+  if (USE_FASTIFY) {
     app.register(contentParser);
   }
 
-  const configSwagger = new DocumentBuilder()
-    .setTitle('Trello Service')
-    .setDescription("Let's try to create a competitor for Trello!")
-    .setVersion('3.0')
-    .addBearerAuth({ type: 'http', name: 'JWT' })
-    .build();
-  const document = SwaggerModule.createDocument(app, configSwagger);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('/doc', app, document);
 
-  await app.listen(config.PORT || 4000, '0.0.0.0');
+  await app.listen(config.PORT || 4000, config.ADDRESS);
 }
 bootstrap();

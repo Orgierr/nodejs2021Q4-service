@@ -20,7 +20,12 @@ export class LoginService {
    * @param  password  - user password (string)
    * @returns  jwt token
    */
-  async login(login: string, password: string) {
+  async login(
+    login: string,
+    password: string,
+  ): Promise<{
+    token: string;
+  }> {
     const user = await this.usersRepository.findOne({
       where: {
         login: login,

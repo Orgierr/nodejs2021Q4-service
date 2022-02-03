@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
@@ -11,55 +11,82 @@ export class TasksService {
     @InjectRepository(Task)
     private tasksRepository: Repository<Task>,
   ) {}
+
   /**
    * Add new task in db
    * @param  createTaskDto - new task
+   * @param  boardId - board id
    * @returns created task  Promise(Task)
    */
-  createTasks(createTaskDto: CreateTaskDto) {
-    return this.tasksRepository.save(createTaskDto);
+  createTasks(createTaskDto: CreateTaskDto, boardId: string): Promise<Task> {
+    return this.tasksRepository.save({ ...createTaskDto, boardId: boardId });
   }
+
   /**
    * Get all tasks by board id
    * @param boardId - board id (string)
    * @returns  all tasks Promise(Task[])
    */
-  getAllTaskByBoardId(boardId: string) {
+  getAllTaskByBoardId(boardId: string): Promise<Task[]> {
     return this.tasksRepository.find({ where: { boardId: boardId } });
   }
+
   /**
    * Get task by boardId and taskId
    * @param  boardId - board id (string)
    * @param  taskId - task id (string)
    * @returns task Promise(Task | undefined)
    */
-  getTaskByBoardIdAndTaskId(boardId: string, taskId: string) {
+  getTaskByBoardIdAndTaskId(
+    boardId: string,
+    taskId: string,
+  ): Promise<Task | undefined> {
     return this.tasksRepository.findOne({
       where: { id: taskId, boardId: boardId },
     });
   }
+
   /**
    * Update task
    * @param updatedTask - new task data (Task)
+   * @param taskId -  task id
+   * @param boardId - board id
    * @returns new task data Promise(Task|undefined)
    */
-  async updateTask(updatedTask: UpdateTaskDto) {
-    const result = await this.tasksRepository.update(
-      updatedTask.id,
-      updatedTask,
-    );
+  async updateTask(
+    updatedTask: UpdateTaskDto,
+    taskId: string,
+    boardId: string,
+  ): Promise<
+    | {
+        id: string;
+        title: string;
+        order: number;
+        description: string;
+        userId: string;
+      }
+    | undefined
+  > {
+    const result = await this.tasksRepository
+      .createQueryBuilder()
+      .update(Task)
+      .set(updatedTask)
+      .where({ id: taskId, boardId: boardId })
+      .returning('*')
+      .execute();
     if (result.affected) {
-      return Task.toResponse(updatedTask);
+      return Task.toResponse(result.raw[0]);
     }
     return undefined;
   }
+
   /**
    * Delete task by boardId and taskId
    * @param  boardId - board id (string)
    * @param  taskId  - task id (string)
    * @returns  deleted result Promise(DeleteResult)
    */
-  deleteTask(boardId: string, taskId: string) {
+  deleteTask(boardId: string, taskId: string): Promise<DeleteResult> {
     return this.tasksRepository.delete({ boardId: boardId, id: taskId });
   }
 }

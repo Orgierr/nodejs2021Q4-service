@@ -42,8 +42,7 @@ export class TasksController {
     @Param('boardId') boardId: string,
     @Body() task: CreateTaskDto,
   ) {
-    task.boardId = boardId;
-    return await this.tasksService.createTasks(task);
+    return await this.tasksService.createTasks(task, boardId);
   }
 
   @ApiOperation({ summary: 'Get all tasks by boardId' })
@@ -81,9 +80,11 @@ export class TasksController {
     @Param('taskId') taskId: string,
     @Body() updatedTask: UpdateTaskDto,
   ) {
-    updatedTask.id = taskId;
-    updatedTask.boardId = boardId;
-    const task = await this.tasksService.updateTask(updatedTask);
+    const task = await this.tasksService.updateTask(
+      updatedTask,
+      taskId,
+      boardId,
+    );
     if (!task) {
       throw new NotFoundException();
     }

@@ -70,8 +70,7 @@ export class BoardsController {
     @Param('id') id: string,
     @Body() updatedBoard: UpdateBoardDto,
   ) {
-    updatedBoard.id = id;
-    const board = await this.boardsService.updateBoard(updatedBoard);
+    const board = await this.boardsService.updateBoard(updatedBoard, id);
     if (!board) {
       throw new NotFoundException();
     }

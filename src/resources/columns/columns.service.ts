@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
 import { Column } from './entities/column.entity';
@@ -14,19 +14,19 @@ export class ColumnsService {
 
   /**
    * Add new column in db
-   * @param  createColumnDto - new task
-   * @returns created task  Promise(Column)
+   * @param  createColumnDto - new column
+   * @returns created column  Promise(Column)
    */
-  createColumn(createColumnDto: CreateColumnDto) {
+  createColumn(createColumnDto: CreateColumnDto): Promise<Column> {
     return this.columnRepository.save(createColumnDto);
   }
 
   /**
    * Get all column by board id
    * @param boardId - board id (string)
-   * @returns  all tasks Promise(Column[])
+   * @returns  all columns Promise(Column[])
    */
-  getAllColumnsByBoardId(boardId: string) {
+  getAllColumnsByBoardId(boardId: string): Promise<Column[]> {
     return this.columnRepository.find({ where: { boardId: boardId } });
   }
 
@@ -34,9 +34,12 @@ export class ColumnsService {
    * Get column by boardId and columnId
    * @param  boardId - board id (string)
    * @param  columnId - column id (string)
-   * @returns task Promise(Column | undefined)
+   * @returns column Promise(Column | undefined)
    */
-  getColumnByBoardIdAndColumnId(boardId: string, columnId: string) {
+  getColumnByBoardIdAndColumnId(
+    boardId: string,
+    columnId: string,
+  ): Promise<Column | undefined> {
     return this.columnRepository.findOne({
       where: { id: columnId, boardId: boardId },
     });
@@ -48,7 +51,10 @@ export class ColumnsService {
    * @param columnId - column id (string)
    * @returns new column data Promise(Column|undefined)
    */
-  async updateColumn(updatedColumn: UpdateColumnDto, columnId: string) {
+  async updateColumn(
+    updatedColumn: UpdateColumnDto,
+    columnId: string,
+  ): Promise<Column | undefined> {
     const result = await this.columnRepository
       .createQueryBuilder()
       .update(Column)
@@ -64,11 +70,11 @@ export class ColumnsService {
   }
 
   /**
-   * Delete task by boardId and taskId
-   * @param  columnId  - task id (string)
+   * Delete column by boardId and columnId
+   * @param  columnId  - column id (string)
    * @returns  deleted result Promise(DeleteResult)
    */
-  deleteColumn(columnId: string) {
+  deleteColumn(columnId: string): Promise<DeleteResult> {
     return this.columnRepository.delete({ id: columnId });
   }
 }

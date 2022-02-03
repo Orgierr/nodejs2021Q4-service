@@ -8,7 +8,7 @@ export class Crypt {
    * @param  password - user password
    * @returns hash Promise<string>
    */
-  async getPasswordHash(password: string) {
+  async getPasswordHash(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);
   }
 
@@ -18,7 +18,7 @@ export class Crypt {
    * @param  password - user password
    * @returns true if success Promise<boolean>
    */
-  async checkPassword(hash: string, password: string) {
+  async checkPassword(hash: string, password: string): Promise<boolean> {
     return await bcrypt.compare(password, hash);
   }
 }
