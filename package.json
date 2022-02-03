@@ -19,9 +19,9 @@
     "test": "cross-env DEBUG=rs:* jest --testMatch \"<rootDir>/test/e2e/test/*.test.js\" --noStackTrace --runInBand",
     "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace",
     "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
-    "migration:gen": "npm run typeorm:cli -- migration:generate -n",
-    "migration:run": "npm run typeorm:cli -- migration:run",
-    "migration:revert": "npm run typeorm:cli -- migration:revert"
+    "migration:gen": "npm run build & npm run typeorm:cli -- migration:generate -n",
+    "migration:run": "npm run build & npm run typeorm:cli -- migration:run",
+    "migration:revert": "npm run build & npm run typeorm:cli -- migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
