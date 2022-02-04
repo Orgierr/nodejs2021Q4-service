@@ -22,7 +22,7 @@ async function bootstrap() {
     new HttpAdapter(),
   );
   app.useLogger(WinstonModule.createLogger(winstonConfig));
-  const httpAdapter = app.get(HttpAdapterHost);
+  const httpAdapter: HttpAdapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter, Logger));
   app.useGlobalInterceptors(new AllInterceptorInterceptor(Logger));
   app.useGlobalPipes(new ValidationPipe());

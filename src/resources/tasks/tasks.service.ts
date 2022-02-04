@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
@@ -37,13 +37,17 @@ export class TasksService {
    * @param  taskId - task id (string)
    * @returns task Promise(Task | undefined)
    */
-  getTaskByBoardIdAndTaskId(
+  async getTaskByBoardIdAndTaskId(
     boardId: string,
     taskId: string,
   ): Promise<Task | undefined> {
-    return this.tasksRepository.findOne({
+    const task: Task | undefined = await this.tasksRepository.findOne({
       where: { id: taskId, boardId: boardId },
     });
+    if (!task) {
+      throw new NotFoundException();
+    }
+    return task;
   }
 
   /**
@@ -51,7 +55,7 @@ export class TasksService {
    * @param updatedTask - new task data (Task)
    * @param taskId -  task id
    * @param boardId - board id
-   * @returns new task data Promise(Task|undefined)
+   * @returns new task data Promise(Task.toResponse|undefined)
    */
   async updateTask(
     updatedTask: UpdateTaskDto,
@@ -67,7 +71,7 @@ export class TasksService {
       }
     | undefined
   > {
-    const result = await this.tasksRepository
+    const result: UpdateResult = await this.tasksRepository
       .createQueryBuilder()
       .update(Task)
       .set(updatedTask)
@@ -77,7 +81,7 @@ export class TasksService {
     if (result.affected) {
       return Task.toResponse(result.raw[0]);
     }
-    return undefined;
+    throw new NotFoundException();
   }
 
   /**
@@ -86,7 +90,13 @@ export class TasksService {
    * @param  taskId  - task id (string)
    * @returns  deleted result Promise(DeleteResult)
    */
-  deleteTask(boardId: string, taskId: string): Promise<DeleteResult> {
-    return this.tasksRepository.delete({ boardId: boardId, id: taskId });
+  async deleteTask(boardId: string, taskId: string): Promise<void> {
+    const result: DeleteResult = await this.tasksRepository.delete({
+      boardId: boardId,
+      id: taskId,
+    });
+    if (!result.affected) {
+      throw new NotFoundException();
+    }
   }
 }

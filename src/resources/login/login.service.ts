@@ -26,13 +26,13 @@ export class LoginService {
   ): Promise<{
     token: string;
   }> {
-    const user = await this.usersRepository.findOne({
+    const user: User | undefined = await this.usersRepository.findOne({
       where: {
         login: login,
       },
     });
     if (user) {
-      const isPassword = await this.crypt.checkPassword(
+      const isPassword: boolean = await this.crypt.checkPassword(
         user.password,
         password,
       );

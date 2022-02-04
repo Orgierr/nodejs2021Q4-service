@@ -6,7 +6,6 @@ import {
   Param,
   Delete,
   HttpCode,
-  NotFoundException,
   Put,
   UseGuards,
   ParseUUIDPipe,
@@ -110,14 +109,7 @@ export class TasksController {
     )
     taskId: string,
   ) {
-    const task = await this.tasksService.getTaskByBoardIdAndTaskId(
-      boardId,
-      taskId,
-    );
-    if (!task) {
-      throw new NotFoundException();
-    }
-    return task;
+    return await this.tasksService.getTaskByBoardIdAndTaskId(boardId, taskId);
   }
 
   @ApiOperation({ summary: 'Update task by taskId' })
@@ -151,15 +143,7 @@ export class TasksController {
     taskId: string,
     @Body() updatedTask: UpdateTaskDto,
   ) {
-    const task = await this.tasksService.updateTask(
-      updatedTask,
-      taskId,
-      boardId,
-    );
-    if (!task) {
-      throw new NotFoundException();
-    }
-    return task;
+    return await this.tasksService.updateTask(updatedTask, taskId, boardId);
   }
 
   @ApiOperation({ summary: 'Delete task by taskId' })
@@ -193,9 +177,6 @@ export class TasksController {
     )
     taskId: string,
   ) {
-    const result = await this.tasksService.deleteTask(boardId, taskId);
-    if (!result.affected) {
-      throw new NotFoundException();
-    }
+    return await this.tasksService.deleteTask(boardId, taskId);
   }
 }

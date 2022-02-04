@@ -6,7 +6,6 @@ import {
   Param,
   Delete,
   HttpCode,
-  NotFoundException,
   Put,
   UseGuards,
   BadRequestException,
@@ -71,11 +70,7 @@ export class BoardsController {
     )
     id: string,
   ) {
-    const board = await this.boardsService.getBoardById(id);
-    if (!board) {
-      throw new NotFoundException();
-    }
-    return board;
+    return await this.boardsService.getBoardById(id);
   }
 
   @ApiOperation({ summary: 'Update board by id' })
@@ -97,11 +92,7 @@ export class BoardsController {
     id: string,
     @Body() updatedBoard: UpdateBoardDto,
   ) {
-    const board = await this.boardsService.updateBoard(updatedBoard, id);
-    if (!board) {
-      throw new NotFoundException();
-    }
-    return board;
+    return await this.boardsService.updateBoard(updatedBoard, id);
   }
 
   @ApiOperation({ summary: 'Delete board by taskId' })
@@ -123,9 +114,6 @@ export class BoardsController {
     )
     id: string,
   ) {
-    const result = await this.boardsService.deleteBoardById(id);
-    if (!result.affected) {
-      throw new NotFoundException();
-    }
+    await this.boardsService.deleteBoardById(id);
   }
 }

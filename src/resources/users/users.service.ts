@@ -1,7 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Crypt } from 'src/crypt/crypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -17,7 +21,9 @@ export class UsersService {
     private crypt: Crypt,
   ) {
     (async () => {
-      const userExist = await this.usersRepository.findOne({ login: 'admin' });
+      const userExist: User | undefined = await this.usersRepository.findOne({
+        login: 'admin',
+      });
       if (!userExist) {
         this.usersRepository.save({
           login: 'admin',
@@ -38,7 +44,9 @@ export class UsersService {
     name: string;
     login: string;
   }> {
-    const userExist = await this.usersRepository.findOne({ login: user.login });
+    const userExist: User | undefined = await this.usersRepository.findOne({
+      login: user.login,
+    });
     if (!userExist) {
       user.password = await this.crypt.getPasswordHash(user.password);
       return User.toResponse(await this.usersRepository.save(user));
@@ -59,11 +67,15 @@ export class UsersService {
    * @param  id - user id (string)
    * @returns user by id  Promise(User | undefined)
    */
-  findOne(id: string): Promise<User | undefined> {
-    return this.usersRepository.findOne({
+  async findOne(id: string): Promise<User | undefined> {
+    const user: User | undefined = await this.usersRepository.findOne({
       select: returnedColumn,
       where: { id: id },
     });
+    if (user) {
+      return user;
+    }
+    throw new NotFoundException();
   }
 
   /**
@@ -83,7 +95,7 @@ export class UsersService {
       }
     | undefined
   > {
-    const userExist = await this.usersRepository.findOne({
+    const userExist: User | undefined = await this.usersRepository.findOne({
       login: updatedUser.login,
     });
     if (!userExist) {
@@ -91,7 +103,7 @@ export class UsersService {
         updatedUser.password,
       );
 
-      const result = await this.usersRepository
+      const result: UpdateResult = await this.usersRepository
         .createQueryBuilder()
         .update(User)
         .set(updatedUser)
@@ -101,7 +113,7 @@ export class UsersService {
       if (result.affected) {
         return User.toResponse(result.raw[0]);
       }
-      return undefined;
+      throw new NotFoundException();
     }
     throw new ConflictException(exceptionMessage.loginUsed);
   }
@@ -111,7 +123,10 @@ export class UsersService {
    * @param id - user id (string)
    * @returns  deleted result Promise(DeleteResult)
    */
-  remove(id: string): Promise<DeleteResult> {
-    return this.usersRepository.delete({ id: id });
+  async remove(id: string): Promise<void> {
+    const result: DeleteResult = await this.usersRepository.delete({ id: id });
+    if (!result.affected) {
+      throw new NotFoundException();
+    }
   }
 }

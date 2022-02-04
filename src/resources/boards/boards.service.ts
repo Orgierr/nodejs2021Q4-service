@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Board } from './entities/board.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
@@ -38,13 +38,17 @@ export class BoardsService {
    * @param  id - board id (string)
    * @returns  board by id  Promise(Board | undefined)
    */
-  getBoardById(id: string): Promise<Board | undefined> {
-    return this.boardRepository
+  async getBoardById(id: string): Promise<Board | undefined> {
+    const board: Board | undefined = await this.boardRepository
       .createQueryBuilder('boards')
       .leftJoinAndSelect('boards.columns', 'column')
       .where({ id: id })
       .orderBy('column.order', 'ASC')
       .getOne();
+    if (!board) {
+      throw new NotFoundException();
+    }
+    return board;
   }
 
   /**
@@ -55,10 +59,10 @@ export class BoardsService {
   async updateBoard(
     updatedBoard: UpdateBoardDto,
     id: string,
-  ): Promise<UpdateBoardDto | undefined> {
-    const board = await this.boardRepository.findOne(id);
+  ): Promise<Board | undefined> {
+    const board: Board | undefined = await this.boardRepository.findOne(id);
     if (board) {
-      const result = await this.boardRepository.save(updatedBoard);
+      const result: Board = await this.boardRepository.save(updatedBoard);
       if (result.id) {
         return result;
       }
@@ -71,7 +75,10 @@ export class BoardsService {
    * @param  id - board id (string)
    * @returns  deleted result Promise(DeleteResult)
    */
-  deleteBoardById(id: string): Promise<DeleteResult> {
-    return this.boardRepository.delete({ id: id });
+  async deleteBoardById(id: string): Promise<void> {
+    const result: DeleteResult = await this.boardRepository.delete({ id: id });
+    if (!result.affected) {
+      throw new NotFoundException();
+    }
   }
 }

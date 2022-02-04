@@ -7,7 +7,6 @@ import {
   Delete,
   HttpCode,
   UseGuards,
-  NotFoundException,
   Put,
   BadRequestException,
   ParseUUIDPipe,
@@ -106,14 +105,10 @@ export class ColumnsController {
     )
     columnId: string,
   ) {
-    const column = await this.columnsService.getColumnByBoardIdAndColumnId(
+    return await this.columnsService.getColumnByBoardIdAndColumnId(
       boardId,
       columnId,
     );
-    if (!column) {
-      throw new NotFoundException();
-    }
-    return column;
   }
 
   @ApiOperation({ summary: 'Update column by  columnId' })
@@ -139,14 +134,7 @@ export class ColumnsController {
     columnId: string,
     @Body() updatedColumn: UpdateColumnDto,
   ) {
-    const column = await this.columnsService.updateColumn(
-      updatedColumn,
-      columnId,
-    );
-    if (!column) {
-      throw new NotFoundException();
-    }
-    return column;
+    return await this.columnsService.updateColumn(updatedColumn, columnId);
   }
 
   @ApiOperation({ summary: 'Delete column by columnId' })
@@ -172,9 +160,6 @@ export class ColumnsController {
     )
     columnId: string,
   ) {
-    const result = await this.columnsService.deleteColumn(columnId);
-    if (!result.affected) {
-      throw new NotFoundException();
-    }
+    return await this.columnsService.deleteColumn(columnId);
   }
 }

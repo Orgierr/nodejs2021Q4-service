@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
 import { Column } from './entities/column.entity';
@@ -47,9 +47,13 @@ export class ColumnsService {
     boardId: string,
     columnId: string,
   ): Promise<Column | undefined> {
-    return await this.columnRepository.findOne({
+    const column: Column | undefined = await this.columnRepository.findOne({
       where: { id: columnId, boardId: boardId },
     });
+    if (!column) {
+      throw new NotFoundException();
+    }
+    return column;
   }
 
   /**
@@ -62,7 +66,7 @@ export class ColumnsService {
     updatedColumn: UpdateColumnDto,
     columnId: string,
   ): Promise<Column | undefined> {
-    const result = await this.columnRepository
+    const result: UpdateResult = await this.columnRepository
       .createQueryBuilder()
       .update(Column)
       .set(updatedColumn)
@@ -73,7 +77,7 @@ export class ColumnsService {
     if (result.affected) {
       return result.raw[0] as Column;
     }
-    return undefined;
+    throw new NotFoundException();
   }
 
   /**
@@ -81,7 +85,12 @@ export class ColumnsService {
    * @param  columnId  - column id (string)
    * @returns  deleted result Promise(DeleteResult)
    */
-  async deleteColumn(columnId: string): Promise<DeleteResult> {
-    return await this.columnRepository.delete({ id: columnId });
+  async deleteColumn(columnId: string): Promise<void> {
+    const result: DeleteResult = await this.columnRepository.delete({
+      id: columnId,
+    });
+    if (!result.affected) {
+      throw new NotFoundException();
+    }
   }
 }

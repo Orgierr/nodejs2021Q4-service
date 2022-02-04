@@ -7,14 +7,12 @@ import {
   Delete,
   Put,
   HttpCode,
-  NotFoundException,
   UseGuards,
   ParseUUIDPipe,
   BadRequestException,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 import { UsersService } from './users.service';
-import { User } from './entities/user.entity';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -73,11 +71,7 @@ export class UsersController {
     )
     id: string,
   ) {
-    const user: User | undefined = await this.usersService.findOne(id);
-    if (user) {
-      return user;
-    }
-    throw new NotFoundException();
+    return await this.usersService.findOne(id);
   }
 
   @ApiOperation({ summary: 'Update user by id' })
@@ -100,11 +94,7 @@ export class UsersController {
     id: string,
     @Body() updatedUser: UpdateUserDto,
   ) {
-    const user = await this.usersService.update(updatedUser, id);
-    if (user) {
-      return user;
-    }
-    throw new NotFoundException();
+    return await this.usersService.update(updatedUser, id);
   }
 
   @ApiOperation({ summary: 'Delete user by id' })
@@ -126,10 +116,6 @@ export class UsersController {
     )
     id: string,
   ) {
-    const result = await this.usersService.remove(id);
-    if (!result.affected) {
-      throw new NotFoundException();
-    }
-    return;
+    return await this.usersService.remove(id);
   }
 }
