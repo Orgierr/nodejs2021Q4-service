@@ -35,6 +35,12 @@ cd {repository name}
 docker-compose up --build
 ```
 
+Production
+
+```
+docker-compose -f docker-compose.prod.yaml up --build
+```
+
 ## Installing NPM modules
 
 ```
