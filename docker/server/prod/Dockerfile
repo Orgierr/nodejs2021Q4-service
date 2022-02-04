@@ -8,5 +8,7 @@ RUN ncc build ./dist/src/main.js -o build
 
 FROM node:16.13.1-alpine3.14
 WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/.env .
 COPY --from=builder /app/build .
 CMD ["node", "./index.js"]
