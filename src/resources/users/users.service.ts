@@ -1,10 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Crypt } from 'src/crypt/crypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { exceptionMessage } from 'src/common/constants';
 
 const returnedColumn: (keyof User)[] = ['id', 'login', 'name'];
 
@@ -39,8 +44,14 @@ export class UsersService {
     name: string;
     login: string;
   }> {
-    user.password = await this.crypt.getPasswordHash(user.password);
-    return User.toResponse(await this.usersRepository.save(user));
+    const userExist: User | undefined = await this.usersRepository.findOne({
+      login: user.login,
+    });
+    if (!userExist) {
+      user.password = await this.crypt.getPasswordHash(user.password);
+      return User.toResponse(await this.usersRepository.save(user));
+    }
+    throw new ConflictException(exceptionMessage.loginUsed);
   }
 
   /**
@@ -84,21 +95,27 @@ export class UsersService {
       }
     | undefined
   > {
-    updatedUser.password = await this.crypt.getPasswordHash(
-      updatedUser.password,
-    );
+    const userExist: User | undefined = await this.usersRepository.findOne({
+      login: updatedUser.login,
+    });
+    if (!userExist) {
+      updatedUser.password = await this.crypt.getPasswordHash(
+        updatedUser.password,
+      );
 
-    const result: UpdateResult = await this.usersRepository
-      .createQueryBuilder()
-      .update(User)
-      .set(updatedUser)
-      .where({ id: id })
-      .returning('*')
-      .execute();
-    if (result.affected) {
-      return User.toResponse(result.raw[0]);
+      const result: UpdateResult = await this.usersRepository
+        .createQueryBuilder()
+        .update(User)
+        .set(updatedUser)
+        .where({ id: id })
+        .returning('*')
+        .execute();
+      if (result.affected) {
+        return User.toResponse(result.raw[0]);
+      }
+      throw new NotFoundException();
     }
-    throw new NotFoundException();
+    throw new ConflictException(exceptionMessage.loginUsed);
   }
 
   /**
