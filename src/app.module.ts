@@ -8,9 +8,11 @@ import { UnhandledError } from './unhandledError/unhandled_error';
 import { FileModule } from './resources/file/file.module';
 import { JwtAppModule } from './jwt-app/jwt-app.module';
 import { ColumnsModule } from './resources/columns/columns.module';
+import ormconfig from '../ormconfig';
+import { ConnectionOptions } from 'typeorm';
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot(ormconfig as ConnectionOptions),
     UsersModule,
     TasksModule,
     BoardsModule,
