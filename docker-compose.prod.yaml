@@ -30,7 +30,7 @@ services:
     image: docker.io/orgierr/app:latest
     build:
       context: .
-      dockerfile: ./docker/server/dev/Dockerfile
+      dockerfile: ./docker/server/prod/Dockerfile
     networks:
       - skynet
     container_name: node

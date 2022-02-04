@@ -3,4 +3,4 @@ WORKDIR /nodejs2021Q4-service/
 ADD ./"package*.json" ./
 RUN npm ci && npm cache clean --force
 ADD . ./
-CMD ["npm", "start"]
+CMD ["npm", "start:dev"]
