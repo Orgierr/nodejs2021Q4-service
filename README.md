@@ -1,9 +1,49 @@
 # RS School REST service
 
+## App endpoints
+
+Access to all routes except /login, /doc requires authentication
+
+```
+Authorization: Bearer <token>
+```
+
+1. `User` (`/users` route)
+   - `GET /users` - get all users (remove password from response)
+   - `GET /users/:userId` - get the user by id (ex. “/users/123”) (remove password from response)
+   - `POST /users` - create user
+   - `PUT /users/:userId` - update user
+   - `DELETE /users/:userId` - delete user
+2. `Board` (`/boards` route)
+   - `GET /boards` - get all boards
+   - `GET /boards/:boardId` - get the board by id
+   - `POST /boards` - create board
+   - `PUT /boards/:boardId` - update board
+   - `DELETE /boards/:boardId` - delete board
+3. `Task` (`/boards/:boardId/tasks` route)
+   - `GET /boards/:boardId/tasks` - get all tasks
+   - `GET /boards/:boardId/tasks/:taskId` - get the task by id
+   - `POST /boards/:boardId/tasks` - create task
+   - `PUT /boards/:boardId/tasks/:taskId` - update task
+   - `DELETE /boards/:boardId/tasks/:taskId` - delete task
+4. `Column` (`/boards/:boardId/columns` route)
+   - `GET /boards/:boardId/columns` - get all columns
+   - `GET /boards/:boardId/columns/:columnId` - get the column by id
+   - `POST /boards/:boardId/columns` - create column
+   - `PUT /boards/:boardId/columns/:columnId` - update column
+   - `DELETE /boards/:boardId/columns/:columnId` - delete column
+5. `File` (`/file` route)
+   - `GET /file/:fileName` - get file by name
+   - `POST /file` - upload file
+6. `Login` (`/login` route)
+   - `POST /login` - login to app by login and password,receive JWT token
+7. `Login` (`/doc` route)
+   - `GET /doc` - swagger ui
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager (>=16.0.0).
 
 ## Downloading
 
@@ -11,12 +51,18 @@
 git clone {repository URL}
 ```
 
+## Installing NPM modules
+
+```
+npm install
+```
+
 ## Migrate TypeORM
 
 Generate migration
 
 ```
-npm run migration:generate
+npm run migration:gen {Migration name}
 ```
 
 Add tables to database
@@ -39,12 +85,6 @@ Production
 
 ```
 docker-compose -f docker-compose.prod.yaml up --build
-```
-
-## Installing NPM modules
-
-```
-npm install
 ```
 
 ## Running application
@@ -101,7 +141,9 @@ Press <kbd>F5</kbd> to debug.
 
 For more information, visit: https://code.visualstudio.com/docs/editor/debugging
 
-# Express
+## Performance Comparison
+
+### Express
 
 | vusers.created_by_name.0     | 6000   |
 | ---------------------------- | ------ |
@@ -124,7 +166,7 @@ For more information, visit: https://code.visualstudio.com/docs/editor/debugging
 | http.response_time-p95       | 172.5  |
 | http.response_time-p99       | 206.5  |
 
-# Fastify
+### Fastify
 
 | vusers.created_by_name.0     | 5900   |
 | ---------------------------- | ------ |
@@ -146,43 +188,3 @@ For more information, visit: https://code.visualstudio.com/docs/editor/debugging
 | http.response_time-median    | 68.7   |
 | http.response_time-p95       | 172.5  |
 | http.response_time-p99       | 206.5  |
-
-# App endpoints
-
-Access to all routes except /login, /doc requires authentication
-
-```
-Authorization: Bearer <token>
-```
-
-1. `User` (`/users` route)
-   - `GET /users` - get all users (remove password from response)
-   - `GET /users/:userId` - get the user by id (ex. “/users/123”) (remove password from response)
-   - `POST /users` - create user
-   - `PUT /users/:userId` - update user
-   - `DELETE /users/:userId` - delete user
-2. `Board` (`/boards` route)
-   - `GET /boards` - get all boards
-   - `GET /boards/:boardId` - get the board by id
-   - `POST /boards` - create board
-   - `PUT /boards/:boardId` - update board
-   - `DELETE /boards/:boardId` - delete board
-3. `Task` (`/boards/:boardId/tasks` route)
-   - `GET /boards/:boardId/tasks` - get all tasks
-   - `GET /boards/:boardId/tasks/:taskId` - get the task by id
-   - `POST /boards/:boardId/tasks` - create task
-   - `PUT /boards/:boardId/tasks/:taskId` - update task
-   - `DELETE /boards/:boardId/tasks/:taskId` - delete task
-4. `Column` (`/boards/:boardId/columns` route)
-   - `GET /boards/:boardId/columns` - get all columns
-   - `GET /boards/:boardId/columns/:columnId` - get the column by id
-   - `POST /boards/:boardId/columns` - create column
-   - `PUT /boards/:boardId/columns/:columnId` - update column
-   - `DELETE /boards/:boardId/columns/:columnId` - delete column
-5. `File` (`/file` route)
-   - `GET /file/:fileName` - get file by name
-   - `POST /file` - upload file
-6. `Login` (`/login` route)
-   - `POST /login` - login to app by login and password,receive JWT token
-7. `Login` (`/doc` route)
-   - `GET /doc` - swagger ui
