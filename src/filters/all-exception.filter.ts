@@ -26,6 +26,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const req = ctx.getRequest<Request>();
     if (exception instanceof HttpException) {
       const exceptionRes = exception.getResponse() as ExceptionResponse;
+
+      httpAdapter.reply(
+        ctx.getResponse(),
+        exception.getResponse(),
+        exception.getStatus(),
+      );
+
       this.logger.warn({
         method: req.method,
         params: req.params,
@@ -34,13 +41,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
         body: req.body,
         responseCode: exceptionRes.statusCode,
       });
-
+    } else {
       httpAdapter.reply(
         ctx.getResponse(),
-        exception.getResponse(),
-        exception.getStatus(),
+        {
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } else {
+
       this.logger.error({
         method: req.method,
         params: req.params,
@@ -50,14 +60,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
         responseCode: HttpStatus.INTERNAL_SERVER_ERROR,
         exception: exception,
       });
-      httpAdapter.reply(
-        ctx.getResponse(),
-        {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          error: ReasonPhrases.INTERNAL_SERVER_ERROR,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
     }
   }
 }

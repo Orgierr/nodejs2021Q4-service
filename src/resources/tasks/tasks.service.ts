@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TaskToResponse } from 'src/types/types';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -35,12 +36,12 @@ export class TasksService {
    * Get task by boardId and taskId
    * @param  boardId - board id (string)
    * @param  taskId - task id (string)
-   * @returns task Promise(Task | undefined)
+   * @returns task Promise(Task)
    */
   async getTaskByBoardIdAndTaskId(
     boardId: string,
     taskId: string,
-  ): Promise<Task | undefined> {
+  ): Promise<Task> {
     const task: Task | undefined = await this.tasksRepository.findOne({
       where: { id: taskId, boardId: boardId },
     });
@@ -55,22 +56,13 @@ export class TasksService {
    * @param updatedTask - new task data (Task)
    * @param taskId -  task id
    * @param boardId - board id
-   * @returns new task data Promise(Task.toResponse|undefined)
+   * @returns new task data Promise(TaskToResponse)
    */
   async updateTask(
     updatedTask: UpdateTaskDto,
     taskId: string,
     boardId: string,
-  ): Promise<
-    | {
-        id: string;
-        title: string;
-        order: number;
-        description: string;
-        userId: string;
-      }
-    | undefined
-  > {
+  ): Promise<TaskToResponse> {
     const result: UpdateResult = await this.tasksRepository
       .createQueryBuilder()
       .update(Task)

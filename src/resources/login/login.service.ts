@@ -4,6 +4,7 @@ import { Crypt } from 'src/crypt/crypt';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { TokenToResponse } from 'src/types/types';
 @Injectable()
 export class LoginService {
   constructor(
@@ -18,14 +19,9 @@ export class LoginService {
    * token
    * @param  login - user login(string)
    * @param  password  - user password (string)
-   * @returns  jwt token
+   * @returns  jwt token (TokenToResponse)
    */
-  async login(
-    login: string,
-    password: string,
-  ): Promise<{
-    token: string;
-  }> {
+  async login(login: string, password: string): Promise<TokenToResponse> {
     const user: User | undefined = await this.usersRepository.findOne({
       where: {
         login: login,

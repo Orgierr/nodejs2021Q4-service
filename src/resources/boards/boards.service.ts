@@ -36,9 +36,9 @@ export class BoardsService {
   /**
    * Get board by id
    * @param  id - board id (string)
-   * @returns  board by id  Promise(Board | undefined)
+   * @returns  board by id  Promise(Board)
    */
-  async getBoardById(id: string): Promise<Board | undefined> {
+  async getBoardById(id: string): Promise<Board> {
     const board: Board | undefined = await this.boardRepository
       .createQueryBuilder('boards')
       .leftJoinAndSelect('boards.columns', 'column')
@@ -54,12 +54,9 @@ export class BoardsService {
   /**
    * Update board
    * @param updatedBoard - new board data (Board)
-   * @returns  new board data Promise(Board|undefined)
+   * @returns  new board data Promise(Board)
    */
-  async updateBoard(
-    updatedBoard: UpdateBoardDto,
-    id: string,
-  ): Promise<Board | undefined> {
+  async updateBoard(updatedBoard: UpdateBoardDto, id: string): Promise<Board> {
     const board: Board | undefined = await this.boardRepository.findOne(id);
     if (board) {
       const result: Board = await this.boardRepository.save(updatedBoard);
@@ -67,7 +64,7 @@ export class BoardsService {
         return result;
       }
     }
-    return undefined;
+    throw new NotFoundException();
   }
 
   /**

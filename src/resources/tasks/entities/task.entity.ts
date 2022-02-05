@@ -3,6 +3,7 @@ import { apiPropertyExample } from 'src/common/constants';
 import { Board } from 'src/resources/boards/entities/board.entity';
 import { Column } from 'src/resources/columns/entities/column.entity';
 import { User } from 'src/resources/users/entities/user.entity';
+import { TaskToResponse } from 'src/types/types';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -58,7 +59,7 @@ export class Task {
    * @param  task - task to destruct
    * @returns id string, title string, order number|null, description string, userId string
    */
-  static toResponse(task: Task) {
+  static toResponse(task: Task): TaskToResponse {
     const { id, title, order, description, userId } = task;
     return { id, title, order, description, userId };
   }

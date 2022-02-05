@@ -1,5 +1,6 @@
 import { Board } from 'src/resources/boards/entities/board.entity';
 import { Task } from 'src/resources/tasks/entities/task.entity';
+import { UserToResponse } from 'src/types/types';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -34,7 +35,7 @@ export class User {
    * @param  user - user to destruct
    * @returns id (string), name (string), login (string)
    */
-  static toResponse(user: User) {
+  static toResponse(user: User): UserToResponse {
     const { id, name, login } = user;
     return { id, name, login };
   }

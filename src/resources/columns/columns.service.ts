@@ -41,12 +41,12 @@ export class ColumnsService {
    * Get column by boardId and columnId
    * @param  boardId - board id (string)
    * @param  columnId - column id (string)
-   * @returns column Promise(Column | undefined)
+   * @returns column Promise(Column)
    */
   async getColumnByBoardIdAndColumnId(
     boardId: string,
     columnId: string,
-  ): Promise<Column | undefined> {
+  ): Promise<Column> {
     const column: Column | undefined = await this.columnRepository.findOne({
       where: { id: columnId, boardId: boardId },
     });
@@ -60,12 +60,12 @@ export class ColumnsService {
    * Update column
    * @param updatedColumn - new column data (Column)
    * @param columnId - column id (string)
-   * @returns new column data Promise(Column|undefined)
+   * @returns new column data Promise(Column)
    */
   async updateColumn(
     updatedColumn: UpdateColumnDto,
     columnId: string,
-  ): Promise<Column | undefined> {
+  ): Promise<Column> {
     const result: UpdateResult = await this.columnRepository
       .createQueryBuilder()
       .update(Column)

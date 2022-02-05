@@ -10,6 +10,7 @@ import { Crypt } from 'src/crypt/crypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { exceptionMessage } from 'src/common/constants';
+import { UserToResponse } from 'src/types/types';
 
 const returnedColumn: (keyof User)[] = ['id', 'login', 'name'];
 
@@ -67,7 +68,7 @@ export class UsersService {
    * @param  id - user id (string)
    * @returns user by id  Promise(User | undefined)
    */
-  async findOne(id: string): Promise<User | undefined> {
+  async findOne(id: string): Promise<User> {
     const user: User | undefined = await this.usersRepository.findOne({
       select: returnedColumn,
       where: { id: id },
@@ -82,19 +83,12 @@ export class UsersService {
    * Update user
    * @param  updatedUser - new user data (UpdateUserDto)
    * @param  id - user id (string)
-   * @returns  user to response Promise(User.toResponse|undefined)
+   * @returns  user to response Promise(UserResponse)
    */
   async update(
     updatedUser: UpdateUserDto,
     id: string,
-  ): Promise<
-    | {
-        id: string;
-        name: string;
-        login: string;
-      }
-    | undefined
-  > {
+  ): Promise<UserToResponse> {
     const userExist: User | undefined = await this.usersRepository.findOne({
       login: updatedUser.login,
     });
