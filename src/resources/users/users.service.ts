@@ -83,7 +83,7 @@ export class UsersService {
    * Update user
    * @param  updatedUser - new user data (UpdateUserDto)
    * @param  id - user id (string)
-   * @returns  user to response Promise(UserResponse)
+   * @returns  user to response Promise(UserToResponse)
    */
   async update(
     updatedUser: UpdateUserDto,
@@ -115,7 +115,6 @@ export class UsersService {
   /**
    * Delete user by id
    * @param id - user id (string)
-   * @returns  deleted result Promise(DeleteResult)
    */
   async remove(id: string): Promise<void> {
     const result: DeleteResult = await this.usersRepository.delete({ id: id });

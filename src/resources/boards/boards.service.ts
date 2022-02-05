@@ -70,7 +70,6 @@ export class BoardsService {
   /**
    * Delete board by id
    * @param  id - board id (string)
-   * @returns  deleted result Promise(DeleteResult)
    */
   async deleteBoardById(id: string): Promise<void> {
     const result: DeleteResult = await this.boardRepository.delete({ id: id });

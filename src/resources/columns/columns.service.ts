@@ -83,7 +83,6 @@ export class ColumnsService {
   /**
    * Delete column by boardId and columnId
    * @param  columnId  - column id (string)
-   * @returns  deleted result Promise(DeleteResult)
    */
   async deleteColumn(columnId: string): Promise<void> {
     const result: DeleteResult = await this.columnRepository.delete({

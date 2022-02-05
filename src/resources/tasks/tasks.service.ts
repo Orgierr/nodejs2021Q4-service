@@ -80,7 +80,6 @@ export class TasksService {
    * Delete task by boardId and taskId
    * @param  boardId - board id (string)
    * @param  taskId  - task id (string)
-   * @returns  deleted result Promise(DeleteResult)
    */
   async deleteTask(boardId: string, taskId: string): Promise<void> {
     const result: DeleteResult = await this.tasksRepository.delete({
