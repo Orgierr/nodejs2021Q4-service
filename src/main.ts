@@ -25,7 +25,13 @@ async function bootstrap() {
   const httpAdapter: HttpAdapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter, Logger));
   app.useGlobalInterceptors(new AllInterceptorInterceptor(Logger));
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
   if (config.USE_FASTIFY) {
     app.register(contentParser);
   }
