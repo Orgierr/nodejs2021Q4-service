@@ -18,6 +18,8 @@ import {
   ApiOkResponse,
   ApiNotFoundResponse,
   ApiProduces,
+  ApiBadRequestResponse,
+  ApiPayloadTooLargeResponse,
 } from '@nestjs/swagger';
 import { FilesUploadDto } from './dto/upload-files.dto';
 import { FileService } from './file.service';
@@ -35,9 +37,15 @@ export class FileController {
   @ApiBody({
     type: FilesUploadDto,
   })
+  @ApiBadRequestResponse({ type: ExceptionExample })
+  @ApiPayloadTooLargeResponse({ type: ExceptionExample })
   @Post()
   @UseInterceptors(
     AppAnyFilesInterceptor({
+      limits: {
+        fieldNameSize: 300,
+        fileSize: 1048576,
+      },
       storage: diskStorage({
         destination: config.MULTER_DEST,
         filename: (_, file, cb) => {
