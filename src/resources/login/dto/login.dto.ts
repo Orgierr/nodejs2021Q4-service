@@ -1,17 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MaxLength, MinLength } from 'class-validator';
-import { apiPropertyExample } from 'src/common/constants';
+import { PickType } from '@nestjs/swagger';
+import { User } from 'src/resources/users/entities/user.entity';
 
-export class LoginDto {
-  @ApiProperty({ example: apiPropertyExample.password })
-  @IsString()
-  @MinLength(5)
-  @MaxLength(25)
-  password: string;
-
-  @ApiProperty({ example: apiPropertyExample.login })
-  @IsString()
-  @MinLength(4)
-  @MaxLength(25)
-  login: string;
-}
+export class LoginDto extends PickType(User, ['password', 'login'] as const) {}

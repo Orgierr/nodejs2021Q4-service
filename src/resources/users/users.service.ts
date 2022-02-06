@@ -5,7 +5,7 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Crypt } from 'src/crypt/crypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserToResponse } from 'src/types/types';
+import { ResponsUserDto } from './dto/respons-user.dto';
 
 const returnedColumn: (keyof User)[] = ['id', 'login', 'name'];
 
@@ -33,13 +33,9 @@ export class UsersService {
   /**
    * Add new user in db
    * @param user - new user (User)
-   * @returns user to response Promise(User.toResponse)
+   * @returns user to response Promise(ResponsUserDto)
    */
-  async create(user: CreateUserDto): Promise<{
-    id: string;
-    name: string;
-    login: string;
-  }> {
+  async create(user: CreateUserDto): Promise<ResponsUserDto> {
     user.password = await this.crypt.getPasswordHash(user.password);
     return User.toResponse(await this.usersRepository.save(user));
   }
@@ -72,12 +68,12 @@ export class UsersService {
    * Update user
    * @param  updatedUser - new user data (UpdateUserDto)
    * @param  id - user id (string)
-   * @returns  user to response Promise(UserToResponse)
+   * @returns  user to response Promise(SelectUserDto)
    */
   async update(
     updatedUser: UpdateUserDto,
     id: string,
-  ): Promise<UserToResponse> {
+  ): Promise<ResponsUserDto> {
     updatedUser.password = await this.crypt.getPasswordHash(
       updatedUser.password,
     );

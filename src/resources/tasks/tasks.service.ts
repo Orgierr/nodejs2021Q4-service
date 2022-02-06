@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TaskToResponse } from 'src/types/types';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -19,8 +18,14 @@ export class TasksService {
    * @param  boardId - board id
    * @returns created task  Promise(Task)
    */
-  createTasks(createTaskDto: CreateTaskDto, boardId: string): Promise<Task> {
-    return this.tasksRepository.save({ ...createTaskDto, boardId: boardId });
+  async createTasks(
+    createTaskDto: CreateTaskDto,
+    boardId: string,
+  ): Promise<Task> {
+    return await this.tasksRepository.save({
+      ...createTaskDto,
+      boardId: boardId,
+    });
   }
 
   /**
@@ -28,8 +33,8 @@ export class TasksService {
    * @param boardId - board id (string)
    * @returns  all tasks Promise(Task[])
    */
-  getAllTaskByBoardId(boardId: string): Promise<Task[]> {
-    return this.tasksRepository.find({ where: { boardId: boardId } });
+  async getAllTaskByBoardId(boardId: string): Promise<Task[]> {
+    return await this.tasksRepository.find({ where: { boardId: boardId } });
   }
 
   /**
@@ -56,13 +61,13 @@ export class TasksService {
    * @param updatedTask - new task data (Task)
    * @param taskId -  task id
    * @param boardId - board id
-   * @returns new task data Promise(TaskToResponse)
+   * @returns new task data Promise(Task)
    */
   async updateTask(
     updatedTask: UpdateTaskDto,
     taskId: string,
     boardId: string,
-  ): Promise<TaskToResponse> {
+  ): Promise<Task> {
     const result: UpdateResult = await this.tasksRepository
       .createQueryBuilder()
       .update(Task)
@@ -71,7 +76,7 @@ export class TasksService {
       .returning('*')
       .execute();
     if (result.affected) {
-      return Task.toResponse(result.raw[0]);
+      return result.raw[0] as Task;
     }
     throw new NotFoundException();
   }

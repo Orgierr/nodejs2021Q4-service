@@ -1,18 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
-import { apiPropertyExample } from 'src/common/constants';
+import { ValidateNested, IsArray } from 'class-validator';
 import { CreateColumnDto } from 'src/resources/columns/dto/create-column.dto';
+import { Board } from '../entities/board.entity';
 
-export class CreateBoardDto {
-  @ApiProperty({ example: apiPropertyExample.title })
-  @IsNotEmpty()
-  @IsString()
-  title: string;
-
+export class CreateBoardDto extends PickType(Board, ['title', 'id'] as const) {
   @ApiProperty()
   @ValidateNested({ each: true })
   @Type(() => CreateColumnDto)
   @IsArray()
-  columns: CreateColumnDto[];
+  readonly columns: CreateColumnDto[];
 }
