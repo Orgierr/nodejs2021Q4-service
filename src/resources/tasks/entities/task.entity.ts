@@ -1,9 +1,15 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { apiPropertyExample } from 'src/common/constants';
 import { Board } from 'src/resources/boards/entities/board.entity';
 import { Column } from 'src/resources/columns/entities/column.entity';
 import { User } from 'src/resources/users/entities/user.entity';
-import { TaskToResponse } from 'src/types/types';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -14,53 +20,54 @@ import {
 @Entity({ name: 'tasks' })
 export class Task {
   @ApiProperty({ example: apiPropertyExample.id })
+  @IsUUID()
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  readonly id: string;
 
   @ApiProperty({ example: apiPropertyExample.title })
+  @IsNotEmpty()
+  @IsString()
   @TableColumn()
-  title: string;
+  readonly title: string;
 
   @ApiProperty({ example: apiPropertyExample.order })
+  @IsNotEmpty()
+  @IsInt()
   @TableColumn()
-  order: number;
+  readonly order: number;
 
   @ApiProperty({ example: apiPropertyExample.description })
+  @IsString()
   @TableColumn()
-  description: string;
+  readonly description: string;
 
   @ApiProperty({ example: apiPropertyExample.id })
+  @IsUUID()
+  @IsOptional()
   @TableColumn({ nullable: true })
-  userId: string;
+  readonly userId: string;
 
   @ApiProperty({ example: apiPropertyExample.id })
+  @IsUUID()
+  @IsOptional()
   @TableColumn({ nullable: true })
-  boardId: string;
+  readonly boardId: string;
 
   @ApiProperty({ example: apiPropertyExample.id })
+  @IsUUID()
+  @IsOptional()
   @TableColumn({ nullable: true })
-  columnId: string;
+  readonly columnId: string;
 
   @ApiHideProperty()
   @ManyToOne(() => User, (user) => user.task, { onDelete: 'SET NULL' })
-  user: User;
+  readonly user: User;
 
   @ApiHideProperty()
   @ManyToOne(() => Column, (column) => column.task)
-  column: Column;
+  readonly column: Column;
 
   @ApiHideProperty()
   @ManyToOne(() => Board, (board) => board.task, { onDelete: 'CASCADE' })
-  board: Board;
-
-  /**
-   * Get id, title, order, description,userId from task
-   *
-   * @param  task - task to destruct
-   * @returns id string, title string, order number|null, description string, userId string
-   */
-  static toResponse(task: Task): TaskToResponse {
-    const { id, title, order, description, userId } = task;
-    return { id, title, order, description, userId };
-  }
+  readonly board: Board;
 }

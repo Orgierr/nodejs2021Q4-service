@@ -27,7 +27,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { SelectUserDto } from './dto/select-user.dto';
+import { ResponsUserDto } from './dto/respons-user.dto';
 import { ExceptionExample, exceptionMessage } from 'src/common/constants';
 
 @ApiBearerAuth()
@@ -38,14 +38,14 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiOperation({ summary: 'Get all users' })
-  @ApiOkResponse({ type: [SelectUserDto] })
+  @ApiOkResponse({ type: [ResponsUserDto] })
   @Get()
   async findAll() {
     return await this.usersService.findAll();
   }
 
   @ApiOperation({ summary: 'Create new user' })
-  @ApiCreatedResponse({ type: SelectUserDto })
+  @ApiCreatedResponse({ type: ResponsUserDto })
   @ApiConflictResponse({ type: ExceptionExample })
   @Post()
   @HttpCode(StatusCodes.CREATED)
@@ -54,7 +54,7 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Get user by id' })
-  @ApiOkResponse({ type: SelectUserDto })
+  @ApiOkResponse({ type: ResponsUserDto })
   @ApiNotFoundResponse({ type: ExceptionExample })
   @ApiParam({
     name: 'id',
@@ -75,7 +75,7 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Update user by id' })
-  @ApiOkResponse({ type: SelectUserDto })
+  @ApiOkResponse({ type: ResponsUserDto })
   @ApiNotFoundResponse({ type: ExceptionExample })
   @ApiConflictResponse({ type: ExceptionExample })
   @ApiParam({

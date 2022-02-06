@@ -1,19 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
-import { apiPropertyExample } from 'src/common/constants';
+import { PickType } from '@nestjs/swagger';
+import { Task } from '../entities/task.entity';
 
-export class CreateTaskDto {
-  @ApiProperty({ example: apiPropertyExample.title })
-  @IsNotEmpty()
-  @IsString()
-  title: string;
-
-  @ApiProperty({ example: apiPropertyExample.order })
-  @IsNotEmpty()
-  @IsInt()
-  order: number;
-
-  @ApiProperty({ example: apiPropertyExample.description })
-  @IsString()
-  description: string;
-}
+export class CreateTaskDto extends PickType(Task, [
+  'title',
+  'order',
+  'description',
+  'userId',
+  'columnId',
+  'boardId',
+] as const) {}

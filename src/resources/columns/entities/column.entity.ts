@@ -1,4 +1,5 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
 import { apiPropertyExample } from 'src/common/constants';
 import { Board } from 'src/resources/boards/entities/board.entity';
 import { Task } from 'src/resources/tasks/entities/task.entity';
@@ -13,26 +14,32 @@ import {
 @Entity({ name: 'columns' })
 export class Column {
   @ApiProperty({ example: apiPropertyExample.id })
+  @IsUUID()
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  readonly id: string;
 
   @ApiProperty({ example: apiPropertyExample.title })
+  @IsNotEmpty()
+  @IsString()
   @TableColumn()
-  title: string;
+  readonly title: string;
 
   @ApiProperty({ example: apiPropertyExample.order })
+  @IsNotEmpty()
+  @IsNumber()
   @TableColumn()
-  order: number;
+  readonly order: number;
 
   @ApiProperty({ example: apiPropertyExample.id })
+  @IsUUID()
   @TableColumn()
-  boardId: string;
+  readonly boardId: string;
 
   @ApiHideProperty()
   @ManyToOne(() => Board, (board) => board.columns, { onDelete: 'CASCADE' })
-  board: Board;
+  readonly board: Board;
 
   @ApiHideProperty()
   @OneToMany(() => Task, (task) => task.column)
-  task: Task;
+  readonly task: Task;
 }

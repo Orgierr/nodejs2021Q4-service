@@ -12,18 +12,6 @@ export interface AppJwtPayload extends JwtPayload {
   login: string;
 }
 
-export interface UserToResponse {
-  id: string;
-  name: string;
-  login: string;
-}
-export interface TaskToResponse {
-  id: string;
-  title: string;
-  order: number;
-  description: string;
-  userId: string;
-}
 export interface TokenToResponse {
   token: string;
 }
