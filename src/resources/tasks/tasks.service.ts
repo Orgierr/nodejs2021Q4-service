@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { exceptionMessage } from 'src/common/constants';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Board } from '../boards/entities/board.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
@@ -10,6 +12,8 @@ export class TasksService {
   constructor(
     @InjectRepository(Task)
     private tasksRepository: Repository<Task>,
+    @InjectRepository(Board)
+    private boardRepository: Repository<Board>,
   ) {}
 
   /**
@@ -22,10 +26,16 @@ export class TasksService {
     createTaskDto: CreateTaskDto,
     boardId: string,
   ): Promise<Task> {
-    return await this.tasksRepository.save({
-      ...createTaskDto,
-      boardId: boardId,
-    });
+    const board: Board | undefined = await this.boardRepository.findOne(
+      boardId,
+    );
+    if (board) {
+      return await this.tasksRepository.save({
+        ...createTaskDto,
+        boardId: boardId,
+      });
+    }
+    throw new NotFoundException(undefined, exceptionMessage.noFoundBoard);
   }
 
   /**

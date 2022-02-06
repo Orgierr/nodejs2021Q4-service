@@ -38,6 +38,7 @@ export class TasksController {
 
   @ApiOperation({ summary: 'Create task for board' })
   @ApiCreatedResponse({ type: Task })
+  @ApiNotFoundResponse({ type: ExceptionExample })
   @ApiParam({
     name: 'boardId',
     format: 'uuid',

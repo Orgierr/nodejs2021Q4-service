@@ -38,6 +38,7 @@ export class ColumnsController {
 
   @ApiOperation({ summary: 'Create column for board' })
   @ApiCreatedResponse({ type: Column })
+  @ApiNotFoundResponse({ type: ExceptionExample })
   @Post()
   @HttpCode(StatusCodes.CREATED)
   async create(

@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { exceptionMessage } from 'src/common/constants';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Board } from '../boards/entities/board.entity';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
 import { Column } from './entities/column.entity';
@@ -10,6 +12,8 @@ export class ColumnsService {
   constructor(
     @InjectRepository(Column)
     private columnRepository: Repository<Column>,
+    @InjectRepository(Board)
+    private boardRepository: Repository<Board>,
   ) {}
 
   /**
@@ -22,10 +26,16 @@ export class ColumnsService {
     createColumnDto: CreateColumnDto,
     boardId: string,
   ): Promise<Column> {
-    return await this.columnRepository.save({
-      ...createColumnDto,
-      boardId: boardId,
-    });
+    const board: Board | undefined = await this.boardRepository.findOne(
+      boardId,
+    );
+    if (board) {
+      return await this.columnRepository.save({
+        ...createColumnDto,
+        boardId: boardId,
+      });
+    }
+    throw new NotFoundException(undefined, exceptionMessage.noFoundBoard);
   }
 
   /**
