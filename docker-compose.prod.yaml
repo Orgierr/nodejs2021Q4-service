@@ -1,0 +1,52 @@
+version: '3.3'
+services:
+  postgres:
+    restart: always
+    image: postgres-image
+    build: ./docker/postgres/
+    networks:
+      - skynet
+    container_name: postgres
+    command:
+      [
+        'postgres',
+        '-c',
+        'logging_collector=on',
+        '-c',
+        'log_directory=/logs',
+        '-c',
+        'log_statement=all',
+      ]
+    env_file: ./.env
+    environment:
+      PGPORT: ${POSTGRES_PORT}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - pg_data:${PGDATA}
+      - postgres_logs:/logs
+  node:
+    restart: always
+    image: docker.io/orgierr/app:latest
+    build:
+      context: .
+      dockerfile: ./docker/server/prod/Dockerfile
+    networks:
+      - skynet
+    container_name: node
+    depends_on:
+      - postgres
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      POSTGRES_HOST: postgres
+    volumes:
+      - ./src:/nodejs2021Q4-service/src
+      - app_logs:/nodejs2021Q4-service/logs
+networks:
+  skynet:
+    driver: bridge
+volumes:
+  app_logs:
+  pg_data:
+  postgres_logs:
