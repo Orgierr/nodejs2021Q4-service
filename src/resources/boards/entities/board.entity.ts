@@ -1,5 +1,5 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { IsUUID, IsNotEmpty, IsString } from 'class-validator';
+import { IsUUID, IsNotEmpty, IsString, IsOptional } from 'class-validator';
 import { apiPropertyExample } from 'src/common/constants';
 import { Column } from 'src/resources/columns/entities/column.entity';
 import { Task } from 'src/resources/tasks/entities/task.entity';
@@ -15,6 +15,7 @@ import {
 @Entity({ name: 'boards' })
 export class Board {
   @ApiProperty({ example: apiPropertyExample.id })
+  @IsOptional()
   @IsUUID()
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
