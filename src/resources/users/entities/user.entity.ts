@@ -30,7 +30,7 @@ export class User {
   @IsString()
   @MinLength(4)
   @MaxLength(25)
-  @Column()
+  @Column({ unique: true })
   readonly login: string;
 
   @ApiProperty({ example: apiPropertyExample.password })
