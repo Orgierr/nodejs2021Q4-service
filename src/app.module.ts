@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TasksModule } from './resources/tasks/tasks.module';
 import { BoardsModule } from './resources/boards/boards.module';
 import { LoginModule } from './resources/login/login.module';
-import { UnhandledError } from './unhandledError/unhandled_error';
 import { FileModule } from './resources/file/file.module';
 import { JwtAppModule } from './jwt-app/jwt-app.module';
 import { ColumnsModule } from './resources/columns/columns.module';
@@ -22,6 +21,6 @@ import { ConnectionOptions } from 'typeorm';
     ColumnsModule,
   ],
   controllers: [],
-  providers: [Logger, UnhandledError],
+  providers: [Logger],
 })
 export class AppModule {}

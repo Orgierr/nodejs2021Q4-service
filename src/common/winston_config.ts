@@ -29,6 +29,7 @@ export const winstonConfig = {
       filename: 'logs/exceptions.log',
       level: 'error',
       handleExceptions: true,
+      handleRejections: true,
     }),
   ],
 };
