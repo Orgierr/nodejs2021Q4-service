@@ -21,9 +21,10 @@ export const exceptionMessage = {
   noFoundBoard: 'Not Found board',
   noFoundUser: 'Not Found user by id',
   noFoundTask: 'Not Found task',
-  noFoundColumn: 'Not Found column by id',
+  noFoundColumn: 'Not Found column',
   noFoundLogin: 'Wrong password or login',
   noFoundFile: 'Not found file',
+  filesEmpty: 'Files empty',
 };
 
 export class ExceptionExample {

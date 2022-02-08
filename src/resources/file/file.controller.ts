@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   Post,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -25,6 +26,7 @@ import { FilesUploadDto } from './dto/upload-files.dto';
 import { FileService } from './file.service';
 import { config } from 'src/common/config';
 import { ExceptionExample } from 'src/common/constants';
+import { FilesUploadPipe } from 'src/pipes/files-validation.pipe';
 
 @ApiBearerAuth()
 @ApiTags('File')
@@ -54,8 +56,10 @@ export class FileController {
       }),
     }),
   )
-  uploadFile() {
-    return;
+  uploadFile(
+    @UploadedFiles(FilesUploadPipe) files: Array<Express.Multer.File>,
+  ) {
+    return files.map((f) => f.filename);
   }
 
   @ApiProduces('application/octet-stream', 'application/json')
