@@ -4,10 +4,11 @@ import { UsersController } from './users.controller';
 import { User } from './entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Crypt } from 'src/crypt/crypt';
+import { UserResponsePipe } from 'src/pipes/user-response.pipe';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
-  providers: [UsersService, Crypt],
+  providers: [UsersService, Crypt, UserResponsePipe],
 })
 export class UsersModule {}

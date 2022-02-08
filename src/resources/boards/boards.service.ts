@@ -61,9 +61,7 @@ export class BoardsService {
     const board: Board | undefined = await this.boardRepository.findOne(id);
     if (board) {
       const result: Board = await this.boardRepository.save(updatedBoard);
-      if (result.id) {
-        return result;
-      }
+      return result;
     }
     throw new NotFoundException(exceptionMessage.noFoundBoard);
   }

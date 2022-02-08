@@ -10,7 +10,6 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
-import { ResponsUserDto } from '../dto/respons-user.dto';
 
 @Entity({ name: 'users' })
 export class User {
@@ -47,15 +46,4 @@ export class User {
   @ApiHideProperty()
   @ManyToOne(() => Board, (board) => board.user)
   readonly board: Board;
-
-  /**
-   * Get id,name,login from user
-   *
-   * @param  user - user to destruct
-   * @returns id (string), name (string), login (string)
-   */
-  static toResponse(user: User): ResponsUserDto {
-    const { id, name, login } = user;
-    return { id, name, login };
-  }
 }

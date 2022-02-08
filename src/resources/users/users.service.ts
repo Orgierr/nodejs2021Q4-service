@@ -11,6 +11,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResponsUserDto } from './dto/respons-user.dto';
 import { exceptionMessage } from 'src/common/constants';
+import { UserResponsePipe } from 'src/pipes/user-response.pipe';
 
 const returnedColumn: (keyof User)[] = ['id', 'login', 'name'];
 
@@ -19,6 +20,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private userResponsePipe: UserResponsePipe,
     private crypt: Crypt,
   ) {
     (async () => {
@@ -46,7 +48,9 @@ export class UsersService {
     });
     if (!userExist) {
       user.password = await this.crypt.getPasswordHash(user.password);
-      return User.toResponse(await this.usersRepository.save(user));
+      return this.userResponsePipe.transform(
+        await this.usersRepository.save(user),
+      );
     }
     throw new ConflictException(exceptionMessage.loginUsed);
   }
@@ -64,6 +68,7 @@ export class UsersService {
    * @param  id - user id (string)
    * @returns user by id  Promise(User | undefined)
    */
+
   async findOne(id: string): Promise<User> {
     const user: User | undefined = await this.usersRepository.findOne({
       select: returnedColumn,
@@ -101,7 +106,7 @@ export class UsersService {
         .returning('*')
         .execute();
       if (result.affected) {
-        return User.toResponse(result.raw[0]);
+        return this.userResponsePipe.transform(result.raw[0] as User);
       }
       throw new ConflictException(exceptionMessage.loginUsed);
     }
