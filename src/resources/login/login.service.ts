@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { TokenToResponse } from 'src/types/types';
+import { exceptionMessage } from 'src/common/constants';
 @Injectable()
 export class LoginService {
   constructor(
@@ -33,7 +34,7 @@ export class LoginService {
         password,
       );
       if (!isPassword) {
-        throw new ForbiddenException();
+        throw new ForbiddenException(exceptionMessage.noFoundLogin);
       }
       return {
         token: this.jwtService.sign({
@@ -42,6 +43,6 @@ export class LoginService {
         }),
       };
     }
-    throw new ForbiddenException();
+    throw new ForbiddenException(exceptionMessage.noFoundLogin);
   }
 }

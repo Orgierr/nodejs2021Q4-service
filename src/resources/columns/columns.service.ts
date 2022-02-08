@@ -35,7 +35,7 @@ export class ColumnsService {
         boardId: boardId,
       });
     }
-    throw new NotFoundException(undefined, exceptionMessage.noFoundBoard);
+    throw new NotFoundException(exceptionMessage.noFoundColumn);
   }
 
   /**
@@ -61,7 +61,7 @@ export class ColumnsService {
       where: { id: columnId, boardId: boardId },
     });
     if (!column) {
-      throw new NotFoundException();
+      throw new NotFoundException(exceptionMessage.noFoundColumn);
     }
     return column;
   }
@@ -87,7 +87,7 @@ export class ColumnsService {
     if (result.affected) {
       return result.raw[0] as Column;
     }
-    throw new NotFoundException();
+    throw new NotFoundException(exceptionMessage.noFoundColumn);
   }
 
   /**
@@ -99,7 +99,7 @@ export class ColumnsService {
       id: columnId,
     });
     if (!result.affected) {
-      throw new NotFoundException();
+      throw new NotFoundException(exceptionMessage.noFoundColumn);
     }
   }
 }

@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { exceptionMessage } from 'src/common/constants';
 
 @Injectable()
 export class BoardsService {
@@ -46,7 +47,7 @@ export class BoardsService {
       .orderBy('column.order', 'ASC')
       .getOne();
     if (!board) {
-      throw new NotFoundException();
+      throw new NotFoundException(exceptionMessage.noFoundBoard);
     }
     return board;
   }
@@ -64,7 +65,7 @@ export class BoardsService {
         return result;
       }
     }
-    throw new NotFoundException();
+    throw new NotFoundException(exceptionMessage.noFoundBoard);
   }
 
   /**
@@ -74,7 +75,7 @@ export class BoardsService {
   async deleteBoardById(id: string): Promise<void> {
     const result: DeleteResult = await this.boardRepository.delete({ id: id });
     if (!result.affected) {
-      throw new NotFoundException();
+      throw new NotFoundException(exceptionMessage.noFoundBoard);
     }
   }
 }

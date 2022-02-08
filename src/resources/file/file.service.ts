@@ -3,6 +3,7 @@ import { createReadStream, constants, ReadStream } from 'fs';
 import { access } from 'fs/promises';
 import { join } from 'path';
 import { config } from 'src/common/config';
+import { exceptionMessage } from 'src/common/constants';
 
 @Injectable()
 export class FileService {
@@ -14,7 +15,7 @@ export class FileService {
       );
       return new StreamableFile(file);
     } catch (error) {
-      throw new NotFoundException('Not found file');
+      throw new NotFoundException(exceptionMessage.noFoundFile);
     }
   }
 }

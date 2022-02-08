@@ -72,7 +72,7 @@ export class UsersService {
     if (user) {
       return user;
     }
-    throw new NotFoundException();
+    throw new NotFoundException(exceptionMessage.noFoundUser);
   }
 
   /**
@@ -105,7 +105,7 @@ export class UsersService {
       }
       throw new ConflictException(exceptionMessage.loginUsed);
     }
-    throw new NotFoundException();
+    throw new NotFoundException(exceptionMessage.noFoundUser);
   }
 
   /**
@@ -115,7 +115,7 @@ export class UsersService {
   async remove(id: string): Promise<void> {
     const result: DeleteResult = await this.usersRepository.delete({ id: id });
     if (!result.affected) {
-      throw new NotFoundException();
+      throw new NotFoundException(exceptionMessage.noFoundUser);
     }
   }
 }

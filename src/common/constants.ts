@@ -18,10 +18,12 @@ export const exceptionMessage = {
   noValidBoardId: 'Validation failed (board id must be uuid is expected)',
   noValidTaskId: 'Validation failed (task id must be uuid is expected)',
   noValidColumnId: 'Validation failed (column id must be uuid is expected)',
-  noFoundBoard: 'Not Found board by id',
+  noFoundBoard: 'Not Found board',
   noFoundUser: 'Not Found user by id',
-  noFoundTask: 'Not Found task by id',
+  noFoundTask: 'Not Found task',
   noFoundColumn: 'Not Found column by id',
+  noFoundLogin: 'Wrong password or login',
+  noFoundFile: 'Not found file',
 };
 
 export class ExceptionExample {

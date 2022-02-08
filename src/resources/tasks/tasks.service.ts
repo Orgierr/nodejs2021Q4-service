@@ -35,7 +35,7 @@ export class TasksService {
         boardId: boardId,
       });
     }
-    throw new NotFoundException(undefined, exceptionMessage.noFoundBoard);
+    throw new NotFoundException(exceptionMessage.noFoundBoard);
   }
 
   /**
@@ -61,7 +61,7 @@ export class TasksService {
       where: { id: taskId, boardId: boardId },
     });
     if (!task) {
-      throw new NotFoundException();
+      throw new NotFoundException(exceptionMessage.noFoundTask);
     }
     return task;
   }
@@ -88,7 +88,7 @@ export class TasksService {
     if (result.affected) {
       return result.raw[0] as Task;
     }
-    throw new NotFoundException();
+    throw new NotFoundException(exceptionMessage.noFoundTask);
   }
 
   /**
@@ -102,7 +102,7 @@ export class TasksService {
       id: taskId,
     });
     if (!result.affected) {
-      throw new NotFoundException();
+      throw new NotFoundException(exceptionMessage.noFoundTask);
     }
   }
 }
