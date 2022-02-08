@@ -14,11 +14,11 @@ export class AuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const token = context
-      .switchToHttp()
-      .getRequest<Request>()
-      .headers.authorization?.split(' ')[1] as string;
     try {
+      const token = context
+        .switchToHttp()
+        .getRequest<Request>()
+        .headers.authorization?.split(' ')[1] as string;
       if (!this.jwtService.verify(token)) {
         throw new UnauthorizedException();
       }
