@@ -9,5 +9,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
   controllers: [BoardsController],
   providers: [BoardsService],
+  exports: [BoardsService],
 })
 export class BoardsModule {}
