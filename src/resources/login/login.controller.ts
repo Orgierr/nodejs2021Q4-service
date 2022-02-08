@@ -5,7 +5,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { TokenExample } from 'src/common/constants';
+import { ExceptionExample, TokenExample } from 'src/common/constants';
+import { TokenToResponse } from 'src/types/types';
 import { LoginDto } from './dto/login.dto';
 import { LoginService } from './login.service';
 
@@ -15,9 +16,9 @@ export class LoginController {
   constructor(private readonly loginService: LoginService) {}
   @ApiOperation({ summary: 'Login to app' })
   @ApiOkResponse({ type: TokenExample })
-  @ApiForbiddenResponse()
+  @ApiForbiddenResponse({ type: ExceptionExample })
   @Post()
-  async login(@Body() auth: LoginDto) {
+  async login(@Body() auth: LoginDto): Promise<TokenToResponse> {
     return await this.loginService.login(auth.login, auth.password);
   }
 }
