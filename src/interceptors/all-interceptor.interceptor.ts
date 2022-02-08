@@ -21,7 +21,7 @@ export class AllInterceptorInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(() =>
-        this.logger.debug!({
+        this.logger.debug?.({
           method: req.method,
           params: req.params,
           url: req.originalUrl,
