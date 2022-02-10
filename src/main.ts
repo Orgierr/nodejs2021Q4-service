@@ -10,7 +10,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { AllInterceptorInterceptor } from './interceptors/all-interceptor.interceptor';
+import { AllInterceptor } from './interceptors/all.interceptor';
 import { contentParser } from 'fastify-file-interceptor';
 import { SwaggerModule } from '@nestjs/swagger';
 import { swaggerConfig } from './common/swagger_config';
@@ -22,9 +22,9 @@ async function bootstrap() {
     new HttpAdapter(),
   );
   app.useLogger(WinstonModule.createLogger(winstonConfig));
-  const httpAdapter: HttpAdapterHost = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter, Logger));
-  app.useGlobalInterceptors(new AllInterceptorInterceptor(Logger));
+  const httpAdapterHost: HttpAdapterHost = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost, Logger));
+  app.useGlobalInterceptors(new AllInterceptor(Logger));
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
