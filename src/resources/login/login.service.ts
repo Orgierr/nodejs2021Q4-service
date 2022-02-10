@@ -1,16 +1,14 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Crypt } from 'src/crypt/crypt';
-import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { TokenToResponse } from 'src/types/types';
 import { exceptionMessage } from 'src/common/constants';
+import { UsersService } from '../users/users.service';
 @Injectable()
 export class LoginService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private readonly usersService: UsersService,
     private crypt: Crypt,
     private jwtService: JwtService,
   ) {}
@@ -23,11 +21,9 @@ export class LoginService {
    * @returns  jwt token (TokenToResponse)
    */
   async login(login: string, password: string): Promise<TokenToResponse> {
-    const user: User | undefined = await this.usersRepository.findOne({
-      where: {
-        login: login,
-      },
-    });
+    const user: User | undefined = await this.usersService.findOneByLogin(
+      login,
+    );
     if (user) {
       const isPassword: boolean = await this.crypt.checkPassword(
         user.password,
