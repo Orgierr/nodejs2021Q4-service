@@ -10,5 +10,6 @@ import { UserResponsePipe } from 'src/pipes/user-response.pipe';
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService, Crypt, UserResponsePipe],
+  exports: [UsersService],
 })
 export class UsersModule {}

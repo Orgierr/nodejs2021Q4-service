@@ -81,6 +81,19 @@ export class UsersService {
   }
 
   /**
+   * Find user by login
+   * @param  login -  user login (string)
+   * @returns  user  Promise(User | undefined)
+   */
+  async findOneByLogin(login: string): Promise<User | undefined> {
+    return await this.usersRepository.findOne({
+      where: {
+        login: login,
+      },
+    });
+  }
+
+  /**
    * Update user
    * @param  updatedUser - new user data (UpdateUserDto)
    * @param  id - user id (string)
