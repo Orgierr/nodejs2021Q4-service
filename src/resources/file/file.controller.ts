@@ -30,7 +30,6 @@ import { FilesUploadPipe } from 'src/pipes/files-validation.pipe';
 
 @ApiBearerAuth()
 @ApiTags('File')
-@UseGuards(AuthGuard)
 @Controller('file')
 export class FileController {
   constructor(private readonly fileService: FileService) {}
@@ -41,6 +40,7 @@ export class FileController {
   })
   @ApiBadRequestResponse({ type: ExceptionExample })
   @ApiPayloadTooLargeResponse({ type: ExceptionExample })
+  @UseGuards(AuthGuard)
   @Post()
   @UseInterceptors(
     AppAnyFilesInterceptor({
