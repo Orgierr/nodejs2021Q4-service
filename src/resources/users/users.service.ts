@@ -106,7 +106,7 @@ export class UsersService {
     const userExist: User | undefined = await this.usersRepository.findOne({
       login: updatedUser.login,
     });
-    if (!userExist) {
+    if (userExist) {
       updatedUser.password = await this.crypt.getPasswordHash(
         updatedUser.password,
       );
@@ -118,10 +118,7 @@ export class UsersService {
         .where({ id: id })
         .returning('*')
         .execute();
-      if (result.affected) {
-        return this.userResponsePipe.transform(result.raw[0] as User);
-      }
-      throw new ConflictException(exceptionMessage.loginUsed);
+      return this.userResponsePipe.transform(result.raw[0] as User);
     }
     throw new NotFoundException(exceptionMessage.noFoundUser);
   }
